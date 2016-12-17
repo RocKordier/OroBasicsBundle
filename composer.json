@@ -11,11 +11,10 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "EHDev\\Bundles\\Oro\\BasicsBundle": "src/"
+        "psr-4": {
+            "EHDev\\Bundle\\BasicsBundle\\": ""
         }
     },
-    "target-dir": "src/",
     "require": {
         "php": ">=5.6",
         "oro/platform": "1.10.*"

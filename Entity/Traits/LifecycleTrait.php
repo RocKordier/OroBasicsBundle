@@ -1,13 +1,13 @@
 <?php
 
-namespace EHDev\Bundles\Oro\BasicsBundle\Entity\Traits;
+namespace EHDev\Bundle\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class LifecycleTrait
  *
- * @package EHDev\Bundles\Oro\BasicsBundle\Entity\Traits
+ * @package EHDev\Bundle\BasicsBundle\Entity\Traits
  */
 trait LifecycleTrait
 {

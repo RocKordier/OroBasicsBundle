@@ -1,8 +1,8 @@
 <?php
 
-namespace EHDev\Bundles\Oro\BasicsBundle\Entity;
+namespace EHDev\Bundle\BasicsBundle\Entity;
 
-use EHDev\Bundles\Oro\BasicsBundle\Entity\Traits\LifecycleTrait;
+use EHDev\Bundle\BasicsBundle\Entity\Traits\LifecycleTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
@@ -11,7 +11,7 @@ use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
 /**
  * Class Base
  *
- * @package EHDev\Bundles\Oro\BasicsBundle\Entity
+ * @package EHDev\Bundle\BasicsBundle\Entity
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  * @Oro\Loggable
