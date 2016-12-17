@@ -1,0 +1,25 @@
+{
+    "name": "ehdev/oro-basics-bundle",
+    "description": "Basic configuration, helper and tools for an oro application",
+    "homepage": "https://github.com/RocKordier/OroBasicsBundle",
+    "keywords": ["Oro Platform", "Symfony2", "Basics"],
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "[RocKordier] Eric Hertwig",
+            "homepage": "http://eric-hertwig.de"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "EHDev\\Bundles\\Oro\\BasicsBundle": "src/"
+        }
+    },
+    "target-dir": "src/",
+    "require": {
+        "php": ">=5.6",
+        "oro/platform": "1.10.*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
