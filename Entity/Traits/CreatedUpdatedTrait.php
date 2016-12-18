@@ -16,7 +16,7 @@ trait CreatedUpdatedTrait
      * Time when created
      *
      * @var \DateTime $created
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created_at")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={
@@ -30,7 +30,7 @@ trait CreatedUpdatedTrait
      * Time when updated
      *
      * @var \DateTime $updated
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="updated_at")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={
