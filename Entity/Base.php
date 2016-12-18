@@ -12,8 +12,8 @@ use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
  * Class Base
  *
  * @package EHDev\Bundle\BasicsBundle\Entity
- * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\MappedSuperclass()
  * @Oro\Loggable
  */
 class Base
