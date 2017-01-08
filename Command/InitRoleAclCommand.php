@@ -12,11 +12,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
 /**
- * Class InitAclCommand
+ * Class InitRoleAclCommand
  *
  * @package EHDev\Bundle\BasicsBundle\Command
  */
-class InitAclCommand extends ContainerAwareCommand
+class InitRoleAclCommand extends ContainerAwareCommand
 {
     const NAME = 'ehdev:initRoleAcl';
 
@@ -92,7 +92,7 @@ class InitAclCommand extends ContainerAwareCommand
                         $this->processPermission($aclManager, $sid, $permission, $acls);
                     }
                 } else {
-                    $output->writeln($roleName.' isn\'t initied yet. Please create roles.yml!');
+                    $output->writeln($roleName.' isn\'t inited yet. Please create roles.yml!');
                 }
                 $aclManager->flush();
             }

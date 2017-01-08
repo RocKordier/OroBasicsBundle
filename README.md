@@ -22,4 +22,4 @@ With composer, add:
 
 Components
 ----------
-@TODO
+[Commands](./Resources/doc/Commands.md)
