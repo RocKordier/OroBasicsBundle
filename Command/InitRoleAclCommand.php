@@ -53,9 +53,9 @@ class InitRoleAclCommand extends ContainerAwareCommand
         $persistRoles = [];
 
         foreach ($configLoader->load() as $resource) {
-            foreach ($resource->data as $role => $label) {
-                if (!$role = $this->getRole($role)) {
-                    $newRole = new Role($role);
+            foreach ($resource->data as $roleName => $label) {
+                if (!$role = $this->getRole($roleName)) {
+                    $newRole = new Role($roleName);
                     $newRole->setLabel($label);
                     $persistRoles[] = $newRole;
                 } else {
