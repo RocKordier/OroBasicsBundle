@@ -2,11 +2,8 @@
 
 namespace EHDev\Bundle\BasicsBundle\Entity;
 
-use BeSimple\SoapBundle\ServiceDefinition\Annotation as Soap;
 use EHDev\Bundle\BasicsBundle\Entity\Traits\LifecycleTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
 
 /**
@@ -15,7 +12,6 @@ use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
  * @package EHDev\Bundle\BasicsBundle\Entity
  * @ORM\HasLifecycleCallbacks()
  * @ORM\MappedSuperclass()
- * @Oro\Loggable
  */
 class Base
 {
@@ -27,7 +23,6 @@ class Base
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Soap\ComplexType("int", nillable=true)
      */
     protected $id;
 
@@ -35,7 +30,6 @@ class Base
      * @var BusinessUnit
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\BusinessUnit")
      * @ORM\JoinColumn(name="business_unit_owner_id", referencedColumnName="id", onDelete="SET NULL")
-     * @Soap\ComplexType("Oro\Bundle\OrganizationBundle\Entity\BusinessUnit", nillable=true)
      */
     protected $owner;
 
@@ -48,7 +42,7 @@ class Base
     }
 
     /**
-     * @return BusinessUnit
+     * @return \Extend\Entity\EX_OroOrganizationBundle_BusinessUnit|\Oro\Bundle\OrganizationBundle\Entity\BusinessUnit
      */
     public function getOwner()
     {
