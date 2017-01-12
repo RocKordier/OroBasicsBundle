@@ -7,7 +7,7 @@ With that Symfony command you can init roles and acls on our custom oro bundle.
 Acls will be overridden every time you execute the command.
 
 ### Roles
-Add a `roles.yml` in `AcmeBundle/Resources/ehdev`
+Add a `roles.yml` in `AcmeBundle/Resources/config/ehdev`
 
 Config sample:
 ``` yml
@@ -17,7 +17,7 @@ ROLE_NAMESPACE_BUNDLE_ROLE2_ID: Label 2
 !ATTENTION!: ATM it's not supported to delete roles.
 
 ###ACL
-Add a `acl.yml` in `AcmeBundle/Resources/ehdev`
+Add a `acl.yml` in `AcmeBundle/Resources/config/ehdev`
 
 Config sample:
 ``` yml
