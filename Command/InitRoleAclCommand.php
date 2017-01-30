@@ -2,6 +2,7 @@
 
 namespace EHDev\Bundle\BasicsBundle\Command;
 
+use Oro\Bundle\SecurityBundle\Acl\Exception\InvalidAclMaskException;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
 use Oro\Bundle\UserBundle\Entity\Role;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
@@ -20,9 +21,6 @@ class InitRoleAclCommand extends ContainerAwareCommand
 {
     const NAME = 'ehdev:initRoleAcl';
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
@@ -31,35 +29,53 @@ class InitRoleAclCommand extends ContainerAwareCommand
     }
 
     /**
-     * {@inheritdoc}
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->initRoles($output);
-        $this->initAcl($output);
+        $configLoader = new CumulativeConfigLoader(
+            'ehdev_roles',
+            new YamlCumulativeFileLoader('Resources/config/ehdev/acl_roles.yml')
+        );
+
+        $this->initRoles($output, $configLoader);
+        $this->initAcl($output, $configLoader);
+
+        return 0;
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface   $output
+     * @param \Oro\Component\Config\Loader\CumulativeConfigLoader $configLoader
      */
-    protected function initRoles(OutputInterface $output)
+    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader)
     {
-        $configLoader = new CumulativeConfigLoader(
-            'ehdev_roles',
-            new YamlCumulativeFileLoader('Resources/config/ehdev/roles.yml')
-        );
-
         $manager      = $this->getManager();
         $persistRoles = [];
 
         foreach ($configLoader->load() as $resource) {
-            foreach ($resource->data as $roleName => $label) {
+            foreach ($resource->data as $roleName => $roleConfigData) {
+                if (!array_key_exists('label', $roleConfigData)) {
+                    $output->writeln('<error>No label for role: '.$roleName.'</error>');
+                    continue;
+                }
+
+                $label       = $roleConfigData['label'];
+                $description = array_key_exists('description', $roleConfigData) ? $roleConfigData['description'] : '';
+
                 if (!$role = $this->getRole($roleName)) {
+                    $output->writeln('Create new role: '.$roleName.' ('.$label.' - '.$description.')');
                     $newRole = new Role($roleName);
                     $newRole->setLabel($label);
+                    $newRole->setExtendDescription($description);
                     $persistRoles[] = $newRole;
                 } else {
-                    $persistRoles[] = $role->setLabel($label);
+                    $role->setLabel($label);
+                    $role->setExtendDescription($description);
+                    $persistRoles[] = $role;
                 }
             }
         }
@@ -72,31 +88,41 @@ class InitRoleAclCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface   $output
+     * @param \Oro\Component\Config\Loader\CumulativeConfigLoader $configLoader
      */
-    protected function initAcl(OutputInterface $output)
+    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader)
     {
-        $configLoader = new CumulativeConfigLoader(
-            'ehdev_acl',
-            new YamlCumulativeFileLoader('Resources/config/ehdev/acl.yml')
-        );
-
         $aclManager = $this->getAclManager();
+
+        if (!$aclManager->isAclEnabled()) {
+            $output->writeln('<error>ACL not enabled. No ACL loaded!</error>');
+
+            return;
+        }
 
         foreach ($configLoader->load() as $resource) {
             foreach ($resource->data as $roleName => $roleConfigData) {
-                if (($role = $this->getRole($roleName)) && $aclManager->isAclEnabled()) {
+                if (($role = $this->getRole($roleName)) && array_key_exists('permissions', $roleConfigData)) {
                     $output->writeln('INIT role: '.$roleName);
                     $sid = $aclManager->getSid($role);
                     foreach ($roleConfigData['permissions'] as $permission => $acls) {
-                        $this->processPermission($aclManager, $sid, $permission, $acls);
+                        try {
+                            $this->processPermission($aclManager, $sid, $permission, $acls);
+                        } catch (InvalidAclMaskException $e) {
+                            $output->writeln('<error>\n\n'.$e->getMessage().'\n</error>');
+                        }
                     }
                 } else {
-                    $output->writeln($roleName.' isn\'t inited yet. Please create roles.yml!');
+                    $output->writeln(
+                        '<comment>Role '.$roleName.' doesn\'t exist or role has no permissions. Skipped!</comment>'
+                    );
                 }
                 $aclManager->flush();
             }
         }
+
+        $output->writeln('Completed');
     }
 
     /**

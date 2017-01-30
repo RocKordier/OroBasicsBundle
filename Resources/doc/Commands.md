@@ -6,23 +6,14 @@ ehdev:initRoleAcl
 With that Symfony command you can init roles and acls on our custom oro bundle.
 Acls will be overridden every time you execute the command.
 
-### Roles
-Add a `roles.yml` in `AcmeBundle/Resources/config/ehdev`
-
-Config sample:
-``` yml
-ROLE_NAMESPACE_BUNDLE_ROLE1_ID: Label 1
-ROLE_NAMESPACE_BUNDLE_ROLE2_ID: Label 2
-```
-!ATTENTION!: ATM it's not supported to delete roles.
-
-###ACL
-Add a `acl.yml` in `AcmeBundle/Resources/config/ehdev`
+### Roles && ACLs
+Add a `acl_roles.yml` in `AcmeBundle/Resources/config/ehdev`
 
 Config sample:
 ``` yml
 ROLE_NAMESPACE_BUNDLE_ROLE1_ID:
     label: Label
+    descriptions: [OPTIONAL] Extended description for role 
     permissions:
         entity|Oro\Bundle\ActivityListBundle\Entity\ActivityList: [VIEW_SYSTEM, CREATE_SYSTEM, EDIT_SYSTEM, DELETE_SYSTEM]
         entity|Oro\Bundle\DashboardBundle\Entity\Dashboard: [VIEW_DEEP, CREATE_DEEP, EDIT_DEEP]
@@ -32,3 +23,7 @@ ROLE_NAMESPACE_BUNDLE_ROLE1_ID:
         action|oro_dataaudit_history: [EXECUTE]
         action|oro_search: [EXECUTE]
 ```
+!ATTENTION!: ATM it's not supported to rename or delete roles.
+
+Possible permission keys:
+`[VIEW|CREATE|EDIT|DELETE|ASSIGN|SHARE]_[BASIC|LOCAL|DEEP|GLOBAL|SYSTEM]|[EXECUTE]`
