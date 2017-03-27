@@ -3,6 +3,7 @@
 namespace EHDev\Bundle\BasicsBundle\Entity\Traits;
 
 use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 /**
  * Class BUOwnerTrait
@@ -19,7 +20,15 @@ trait BUOwnerTrait
     protected $owner;
 
     /**
-     * @return \Extend\Entity\EX_OroOrganizationBundle_BusinessUnit|\Oro\Bundle\OrganizationBundle\Entity\BusinessUnit
+     * @var Organization
+     *
+     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
+     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $organization;
+
+    /**
+     * @return BusinessUnit
      */
     public function getOwner()
     {
@@ -31,12 +40,36 @@ trait BUOwnerTrait
      *
      * @param BusinessUnit $businessUnit
      *
-     * @return $this
+     * @return self
      */
     public function setOwner(BusinessUnit $businessUnit)
     {
         $this->owner = $businessUnit;
 
         return $this;
+    }
+
+    /**
+     * Set organization
+     *
+     * @param  Organization $organization
+     *
+     * @return self
+     */
+    public function setOrganization(Organization $organization = null)
+    {
+        $this->organization = $organization;
+
+        return $this;
+    }
+
+    /**
+     * Get organization
+     *
+     * @return Organization
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
     }
 }
