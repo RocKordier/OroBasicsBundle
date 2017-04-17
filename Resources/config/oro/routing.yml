@@ -1,0 +1,14 @@
+ehdev_basics_bundle:
+    resource:     "@EHDevBasicsBundle/Controller/"
+    type:         annotation
+    prefix:       /ehdev_basics
+
+ehdev_basics_api_simplecontact:
+    resource:     "@EHDevBasicsBundle/Controller/Api/Rest/SimpleContactController.php"
+    type:         rest
+    prefix:       api/rest/{version}/
+    requirements:
+        version:  latest|v1
+        _format:  json
+    defaults:
+        version:  latest

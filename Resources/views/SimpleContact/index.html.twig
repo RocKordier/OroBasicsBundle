@@ -1,0 +1,36 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% set gridName = 'ehdev-basics-simplecontact-grid' %}
+{% set pageTitle = 'ehdev.basics.simplecontact.entity_label'|trans %}
+
+{% block navButtons %}
+    {% if resource_granted('ehdev_basics_simplecontact_create') %}
+        {% set dialogTitle = 'ehdev.basics.simplecontact.create_entity.label'|trans %}
+        {{ UI.clientButton({
+            'dataUrl': path('ehdev_basics_simplecontact_create'),
+            'aCss': 'no-hash',
+            'iCss': 'fa-plus',
+            'dataId': null,
+            'title' : dialogTitle,
+            'label' : dialogTitle,
+            'widget' : {
+                'type' : 'dialog',
+                'multiple' : false,
+                'reload-grid-name' : gridName,
+                'options' : {
+                    'stateEnabled': false,
+                    'dialogOptions' : {
+                        'title' : dialogTitle,
+                        'allowMaximize': true,
+                        'allowMinimize': true,
+                        'dblclick': 'maximize',
+                        'maximizedHeightDecreaseBy': 'minimize-bar',
+                        'width': 700
+                    }
+                }
+            }
+        })
+        }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+navigation:
+    menu_config:
+        items:
+            ehdev_basics_tab:
+                uri: '#'
+                label: 'ehdev.basics.tab'
+                extras:
+                    position: 5
+            ehdev_basics_simplecontact:
+                uri: '#'
+                label: 'ehdev.basics.simplecontact.entity_plural_label'
+                route:   'ehdev_basics_simplecontact_index'
+                extras:
+                    icon: fa-puzzle-piece
+        tree:
+            application_menu:
+                children:
+                    ehdev_basics_tab:
+                        children:
+                            ehdev_basics_simplecontact: ~

@@ -1,0 +1,31 @@
+parameters:
+    ehdev.basics.simplecontact.type.class: EHDev\Bundle\BasicsBundle\Form\Type\SimpleContactType
+    ehdev.basics.simplecontactaddress.type.class: EHDev\Bundle\BasicsBundle\Form\Type\SimpleContactAddressType
+
+services:
+#Types
+    ehdev.basics.simplecontact.form.type:
+        class: "%ehdev.basics.simplecontact.type.class%"
+        tags:
+            - { name: form.type, alias: "ehdev_basics_simplecontact" }
+    ehdev.basics.simplecontactaddress.form.type:
+        class: "%ehdev.basics.simplecontactaddress.type.class%"
+        arguments:
+            - "@oro_address.form.listener.address"
+        tags:
+            - { name: form.type, alias: "ehdev_basics_simplecontactaddress" }
+
+# Forms
+    ehdev.basics.simplecontact.form:
+        class: Symfony\Component\Form\Form
+        factory: ['@form.factory', createNamed]
+        arguments:
+            - "ehdev_basics_simplecontact_form"
+            - "ehdev_basics_simplecontact"
+
+    ehdev.basics.simplecontactaddress.form:
+        class: Symfony\Component\Form\Form
+        factory: ['@form.factory', createNamed]
+        arguments:
+            - "ehdev_basics_simplecontactaddress_form"
+            - "ehdev_basics_simplecontactaddress"

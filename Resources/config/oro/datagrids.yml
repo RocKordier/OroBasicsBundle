@@ -1,0 +1,2 @@
+imports:
+    - { resource: 'dg/simplecontact.yml' }

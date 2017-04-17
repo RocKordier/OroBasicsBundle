@@ -148,7 +148,7 @@ class SimpleContact extends ExtendSimpleContact
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length=255, nullable=false)
+     * @ORM\Column(name="phone", type="string", length=255, nullable=true)
      * @ConfigField(
      *      defaultValues={
      *          "dataaudit"={"auditable"=true}
@@ -195,7 +195,7 @@ class SimpleContact extends ExtendSimpleContact
 
     /**
      * @var \EHDev\Bundle\BasicsBundle\Entity\SimpleContactAddress
-     * @ORM\OneToOne(targetEntity="EHDev\Bundle\BasicsBundle\Entity\SimpleContactAddress")
+     * @ORM\OneToOne(targetEntity="EHDev\Bundle\BasicsBundle\Entity\SimpleContactAddress", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id", nullable=true)
      */
     protected $address;

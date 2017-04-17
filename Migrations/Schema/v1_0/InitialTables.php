@@ -74,7 +74,7 @@ class InitialTables implements Migration
         $table->addColumn('gender', 'string', ['notnull' => false, 'length' => 8]);
         $table->addColumn('birthday', 'date', ['notnull' => false, 'comment' => '(DC2Type:date)']);
         $table->addColumn('email', 'string', ['notnull' => false, 'length' => 255]);
-        $table->addColumn('phone', 'string', ['length' => 255]);
+        $table->addColumn('phone', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('skype', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('twitter', 'string', ['notnull' => false, 'length' => 255]);
         $table->addColumn('facebook', 'string', ['notnull' => false, 'length' => 255]);
