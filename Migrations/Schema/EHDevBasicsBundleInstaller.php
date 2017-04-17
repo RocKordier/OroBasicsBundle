@@ -28,7 +28,7 @@ class EHDevBasicsBundleInstaller implements Installation
     {
         /** v1_0 */
         InitialTables::createEhdevBasicsSCATable($schema);
-        InitialTables::createEhdevBasicsContractTable($schema);
+        InitialTables::createEhdevBasicsContactTable($schema);
 
         InitialTables::addEhdevBasicSCAForeignKeys($schema);
         InitialTables::addEhdevBasicsContactForeignKeys($schema);

@@ -20,7 +20,7 @@ class InitialTables implements Migration
     public function up(Schema $schema, QueryBag $queries)
     {
         self::createEhdevBasicsSCATable($schema);
-        self::createEhdevBasicsContractTable($schema);
+        self::createEhdevBasicsContactTable($schema);
 
         self::addEhdevBasicSCAForeignKeys($schema);
         self::addEhdevBasicsContactForeignKeys($schema);
@@ -61,7 +61,7 @@ class InitialTables implements Migration
         $table->addIndex(['region_code'], 'idx_a7dd6f7aaeb327af', []);
     }
 
-    public static function createEhdevBasicsContractTable(Schema $schema)
+    public static function createEhdevBasicsContactTable(Schema $schema)
     {
         $table = $schema->createTable('ehdev_basics_contact');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
