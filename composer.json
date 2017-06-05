@@ -16,7 +16,7 @@
         }
     },
     "require": {
-        "oro/platform": "~2.1.0"
+        "oro/platform": "2.1.*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
