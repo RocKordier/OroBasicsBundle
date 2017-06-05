@@ -1,2 +1,2 @@
 bundles:
-    - { name: EHDev\Bundle\BasicsBundle\EHDevBasicsBundle, priority: 0 }
+    - { name: EHDev\Bundle\BasicsBundle\EHDevBasicsBundle, priority: 50 }
