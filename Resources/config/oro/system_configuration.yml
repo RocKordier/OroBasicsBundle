@@ -1,0 +1,32 @@
+system_configuration:
+    groups:
+        ehdev_basics_settings:
+            icon: fa-google
+            title: ehdev.basics.system_configuration.groups.apikeys.title
+        ehdev_basics_googlemaps:
+            title: ehdev.basics.system_configuration.groups.google_maps_key.title
+            priority: 50
+            tooltip: ehdev.basics.system_configuration.groups.google_maps_key.tooltip
+
+    fields:
+        ehdev_basics.googlemaps_api_key:
+            data_type: string
+            type: text
+            ui_only: true
+            options:
+                label: ehdev.basics.system_configuration.groups.google_maps_key.title
+                resettable: false
+                required: false
+            priority: 30
+
+    tree:
+        system_configuration:
+            platform:
+                children:
+                    integrations:
+                        children:
+                            ehdev_basics_settings:
+                                children:
+                                    ehdev_basics_googlemaps:
+                                        children:
+                                            - ehdev_basics.googlemaps_api_key

@@ -1,0 +1,21 @@
+{% macro gmap(address, label, zoom = 15) %}
+    {# Credits to digedag - https://github.com/digedag/ #}
+    {% set id = random() %}
+
+    <div class="map-box" id="address-map-{{ id }}"></div>
+
+    <script type="text/javascript">
+        require(['jquery', 'oroaddress/js/mapservice/googlemaps', 'oroui/js/widget-manager'],
+            function($, Googlemaps) {
+                var mapContainerFrame = $('#address-map-{{ id }}');
+                var mapView = new Googlemaps({
+                    'mapOptions': {
+                        zoom: {{ zoom }}
+                    },
+                    'el': mapContainerFrame,
+                    'apiKey': '{{ oro_config_value('ehdev_basics.googlemaps_api_key') }}'
+                });
+                mapView.updateMap('{{ address }}', '{{ label }}');
+            });
+    </script>
+{% endmacro %}
