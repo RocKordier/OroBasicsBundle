@@ -6,4 +6,3 @@ ehdev:
                 google_maps_key:
                     title: GoogleMaps Key
                     tooltip: Please generate Key - https://developers.google.com/maps/documentation/javascript/get-api-key
-

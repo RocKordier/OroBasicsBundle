@@ -1,15 +1,9 @@
 <?php
-
-namespace EHDev\Bundle\BasicsBundle\Entity\Traits;
+namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
-/**
- * Class CreatedUpdatedTrait
- *
- * @package EHDev\Bundle\BasicsBundle\Entity\Traits
- */
 trait CreatedUpdatedTrait
 {
     /**

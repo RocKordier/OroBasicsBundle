@@ -1,15 +1,11 @@
 <?php
+namespace EHDev\BasicsBundle\Entity\Traits;
 
-namespace EHDev\Bundle\BasicsBundle\Entity\Traits;
+use Doctrine\ORM\Mapping as ORM;
 
 use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
-/**
- * Class BUOwnerTrait
- *
- * @package EHDev\Bundle\BasicsBundle\Entity\Traits
- */
 trait BUOwnerTrait
 {
     /**

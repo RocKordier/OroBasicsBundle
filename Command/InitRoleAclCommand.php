@@ -1,22 +1,19 @@
 <?php
+namespace EHDev\BasicsBundle\Command;
 
-namespace EHDev\Bundle\BasicsBundle\Command;
+use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\SecurityBundle\Acl\Exception\InvalidAclMaskException;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
 use Oro\Bundle\UserBundle\Entity\Role;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
+
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
-/**
- * Class InitRoleAclCommand
- *
- * @package EHDev\Bundle\BasicsBundle\Command
- */
 class InitRoleAclCommand extends ContainerAwareCommand
 {
     const NAME = 'ehdev:initRoleAcl';
@@ -29,12 +26,9 @@ class InitRoleAclCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface   $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $configLoader = new CumulativeConfigLoader(
             'ehdev_roles',
@@ -51,7 +45,7 @@ class InitRoleAclCommand extends ContainerAwareCommand
      * @param \Symfony\Component\Console\Output\OutputInterface   $output
      * @param \Oro\Component\Config\Loader\CumulativeConfigLoader $configLoader
      */
-    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader)
+    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader): void
     {
         $manager      = $this->getManager();
         $persistRoles = [];
@@ -59,7 +53,7 @@ class InitRoleAclCommand extends ContainerAwareCommand
         foreach ($configLoader->load() as $resource) {
             foreach ($resource->data as $roleName => $roleConfigData) {
                 if (!array_key_exists('label', $roleConfigData)) {
-                    $output->writeln('<error>No label for role: '.$roleName.'</error>');
+                    $output->writeln(sprintf('<error>No label for role: %s</error>', $roleName));
                     continue;
                 }
 
@@ -91,7 +85,7 @@ class InitRoleAclCommand extends ContainerAwareCommand
      * @param \Symfony\Component\Console\Output\OutputInterface   $output
      * @param \Oro\Component\Config\Loader\CumulativeConfigLoader $configLoader
      */
-    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader)
+    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
     {
         $aclManager = $this->getAclManager();
 
@@ -136,7 +130,7 @@ class InitRoleAclCommand extends ContainerAwareCommand
         SecurityIdentityInterface $sid,
         $permission,
         array $acls
-    ) {
+    ): void {
         $oId = $aclManager->getOid(str_replace('|', ':', $permission));
 
         $extension    = $aclManager->getExtensionSelector()->select($oId);
@@ -155,29 +149,18 @@ class InitRoleAclCommand extends ContainerAwareCommand
             $aclManager->setPermission($sid, $oId, $mask);
         }
     }
-
-    /**
-     * @param $roleName
-     *
-     * @return Role|null
-     */
-    protected function getRole($roleName)
+    
+    protected function getRole(string $roleName): ?Role
     {
         return $this->getManager()->getRepository('OroUserBundle:Role')->findOneBy(['role' => $roleName]);
     }
-
-    /**
-     * @return \Doctrine\Common\Persistence\ObjectManager|object
-     */
-    protected function getManager()
+    
+    protected function getManager(): ObjectManager
     {
         return $this->getContainer()->get('doctrine')->getManager();
     }
-
-    /**
-     * @return object|\Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager
-     */
-    protected function getAclManager()
+    
+    protected function getAclManager(): AclManager
     {
         return $this->getContainer()->get('oro_security.acl.manager');
     }

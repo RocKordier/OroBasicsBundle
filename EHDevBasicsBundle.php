@@ -1,7 +1,7 @@
 <?php
-namespace EHDev\Bundle\BasicsBundle;
+namespace EHDev\BasicsBundle;
 
-use EHDev\Bundle\BasicsBundle\DependencyInjection\EHDevBasicsExtension;
+use EHDev\BasicsBundle\DependencyInjection\EHDevBasicsExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class EHDevBasicsBundle extends Bundle

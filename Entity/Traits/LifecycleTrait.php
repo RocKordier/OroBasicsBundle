@@ -1,14 +1,8 @@
 <?php
-
-namespace EHDev\Bundle\BasicsBundle\Entity\Traits;
+namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Class LifecycleTrait
- *
- * @package EHDev\Bundle\BasicsBundle\Entity\Traits
- */
 trait LifecycleTrait
 {
     use CreatedUpdatedTrait;
@@ -18,7 +12,7 @@ trait LifecycleTrait
      *
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
         $this->createdAt = $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
@@ -28,7 +22,7 @@ trait LifecycleTrait
      *
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
