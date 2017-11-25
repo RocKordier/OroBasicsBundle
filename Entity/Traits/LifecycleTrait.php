@@ -12,7 +12,7 @@ trait LifecycleTrait
      *
      * @ORM\PrePersist
      */
-    public function prePersist(): void
+    public function prePersist()
     {
         $this->createdAt = $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
@@ -22,7 +22,7 @@ trait LifecycleTrait
      *
      * @ORM\PreUpdate
      */
-    public function preUpdate(): void
+    public function preUpdate()
     {
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
