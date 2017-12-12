@@ -2,10 +2,11 @@
 namespace EHDev\BasicsBundle\Command;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
-use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
 
+use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
+use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\UIBundle\Tools\EntityLabelBuilder;
+
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,17 +16,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class MissingEntityLabelsCommand extends ContainerAwareCommand
 {
-    private $entityLabelBuilder;
-
     const NAME = 'ehdev:missingEntityLabels';
     const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
-
-    public function __construct(?string $name = null)
-    {
-        parent::__construct($name);
-
-        $this->entityLabelBuilder = new EntityLabelBuilder();
-    }
+    const OPTION_IGNORE_ORO = 'ignore-oro';
+    const OPTION_IGNORE_EXTEND = 'ignore-extend';
 
     protected function configure()
     {
@@ -33,13 +27,13 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             ->setName(self::NAME)
             ->setDescription('Shows all Labels which are missing for entities')
             ->addOption(
-                'ignore-oro',
+                self::OPTION_IGNORE_ORO,
                 null,
                 InputOption::VALUE_NONE,
                 'Ignore Entities who lives in the Oro\... Namespace!'
             )
             ->addOption(
-                'ignore-extend',
+                self::OPTION_IGNORE_EXTEND,
                 null,
                 InputOption::VALUE_NONE,
                 'Ignore Entities who lives in the Extend\... Namespace!'
@@ -57,22 +51,21 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             $className = $item->getClassName();
             $classMetaData = $this->getClassMetaData($className);
 
-            if ($input->getOption('ignore-oro') && preg_match('/^Oro[^s]/i', $className)) {
-                continue;
-            }
-
-            if ($input->getOption('ignore-extend') && preg_match('/^Extend[^s]/i', $className)) {
+            if (
+                ($input->getOption(self::OPTION_IGNORE_ORO) && preg_match('/^Oro[^s]/i', $className)) ||
+                ($input->getOption(self::OPTION_IGNORE_EXTEND) && preg_match('/^Extend[^s]/i', $className))
+            ) {
                 continue;
             }
 
             /** Check EntityLabel */
             $transKey = EntityLabelBuilder::getEntityLabelTranslationKey($className);
-            if($transKey == $this->getTranslation($transKey)) {
+            if ($transKey == $this->getTranslation($transKey)) {
                 $untranslated[] = ['entity_label', $transKey];
             }
             /** Check EntityPluralLabel */
             $transKey = EntityLabelBuilder::getEntityPluralLabelTranslationKey($className);
-            if($transKey == $this->getTranslation($transKey)) {
+            if ($transKey == $this->getTranslation($transKey)) {
                 $untranslated[] = ['entity_plural_label', $transKey];
             }
 
@@ -81,13 +74,13 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             foreach ($fieldNames as $fieldName) {
                 if(!$this->fieldIsTranslated($className, $fieldName)) {
                     $untranslated[] = [$fieldName, EntityLabelBuilder::getFieldLabelTranslationKey($className, $fieldName)];
-                    }
+                }
             }
 
             if (count($untranslated) != 0) {
                 $io->section($className);
                 $io->table(
-                    ['Property', 'transKey',],
+                    ['Property', 'transKey'],
                     $untranslated
                 );
             }
@@ -100,13 +93,13 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
     {
         /** Check default label */
         $transKey = EntityLabelBuilder::getFieldLabelTranslationKey($class, $fieldName);
-        if($transKey != $this->getTranslation($transKey)) {
+        if ($transKey != $this->getTranslation($transKey)) {
             return true;
         }
 
         /** Check label from entityConfig */
         $transKey = $this->getConfigProvider()->getConfig($class, $fieldName)->get('label');
-        if($transKey && $transKey != $this->getTranslation($transKey)) {
+        if ($transKey && $transKey != $this->getTranslation($transKey)) {
             return true;
         }
 
@@ -115,12 +108,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
     private function getTranslation(string $trans): ?string
     {
-        return $this->getTranslator()->trans($trans);
-    }
-
-    private function getTranslator(): TranslatorInterface
-    {
-        return $this->getContainer()->get('translator');
+        return $this->getContainer()->get('translator')->trans($trans);
     }
 
     private function getConfigProvider(): ConfigProvider
