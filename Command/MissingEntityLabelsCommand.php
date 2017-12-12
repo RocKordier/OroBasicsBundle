@@ -98,9 +98,8 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
     private function fieldIsTranslated(string $class, string $fieldName): bool
     {
-        $transKey = EntityLabelBuilder::getFieldLabelTranslationKey($class, $fieldName);
-
         /** Check default label */
+        $transKey = EntityLabelBuilder::getFieldLabelTranslationKey($class, $fieldName);
         if($transKey != $this->getTranslation($transKey)) {
             return true;
         }
