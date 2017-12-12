@@ -27,3 +27,12 @@ ROLE_NAMESPACE_BUNDLE_ROLE1_ID:
 
 Possible permission keys:
 `[VIEW|CREATE|EDIT|DELETE|ASSIGN|SHARE]_[BASIC|LOCAL|DEEP|GLOBAL|SYSTEM]|[EXECUTE]`
+
+
+ehdev:missingEntityLabels
+-------------------------
+Command to identify missing entity translations
+### Options
+You could use the following optional options
+* `--ignore-oro` to ignore entities who lives in the `Oro\` Namespace e.g. `Oro\Bundle\ReportBundle\Entity\CalendarDate`
+* `--ignore-extend` to ignore entities who lives in the `Extend\` Namespace e.g. `Extend\Entity\EV_Ce_Attendee_Status`
