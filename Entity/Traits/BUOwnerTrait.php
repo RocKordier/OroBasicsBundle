@@ -24,25 +24,25 @@ trait BUOwnerTrait
     protected $organization;
 
     /**
-     * @return BusinessUnit
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
      * Set a business unit owning this report
      *
      * @param BusinessUnit $businessUnit
      *
      * @return self
      */
-    public function setOwner(BusinessUnit $businessUnit)
+    public function setOwner(BusinessUnit $businessUnit = null)
     {
         $this->owner = $businessUnit;
 
         return $this;
+    }
+
+    /**
+     * @return BusinessUnit|null
+     */
+    public function getOwner()
+    {
+        return $this->owner;
     }
 
     /**
@@ -62,7 +62,7 @@ trait BUOwnerTrait
     /**
      * Get organization
      *
-     * @return Organization
+     * @return Organization|null
      */
     public function getOrganization()
     {

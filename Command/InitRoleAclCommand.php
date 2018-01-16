@@ -45,7 +45,7 @@ class InitRoleAclCommand extends ContainerAwareCommand
      * @param \Symfony\Component\Console\Output\OutputInterface   $output
      * @param \Oro\Component\Config\Loader\CumulativeConfigLoader $configLoader
      */
-    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader): void
+    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader)
     {
         $manager      = $this->getManager();
         $persistRoles = [];
@@ -85,7 +85,7 @@ class InitRoleAclCommand extends ContainerAwareCommand
      * @param \Symfony\Component\Console\Output\OutputInterface   $output
      * @param \Oro\Component\Config\Loader\CumulativeConfigLoader $configLoader
      */
-    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
+    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader)
     {
         $aclManager = $this->getAclManager();
 
@@ -130,7 +130,7 @@ class InitRoleAclCommand extends ContainerAwareCommand
         SecurityIdentityInterface $sid,
         $permission,
         array $acls
-    ): void {
+    ) {
         $oId = $aclManager->getOid(str_replace('|', ':', $permission));
 
         $extension    = $aclManager->getExtensionSelector()->select($oId);
@@ -149,17 +149,21 @@ class InitRoleAclCommand extends ContainerAwareCommand
             $aclManager->setPermission($sid, $oId, $mask);
         }
     }
-    
-    protected function getRole(string $roleName): ?Role
+
+    /**
+     * @param string $roleName
+     * @return null|Role
+     */
+    protected function getRole(string $roleName)
     {
         return $this->getManager()->getRepository('OroUserBundle:Role')->findOneBy(['role' => $roleName]);
     }
-    
+
     protected function getManager(): ObjectManager
     {
         return $this->getContainer()->get('doctrine')->getManager();
     }
-    
+
     protected function getAclManager(): AclManager
     {
         return $this->getContainer()->get('oro_security.acl.manager');

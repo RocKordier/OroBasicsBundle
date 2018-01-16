@@ -17,6 +17,7 @@
         }
     },
     "require": {
+        "php": ">=7.0",
         "oro/platform": "~2.3"
     },
     "minimum-stability": "dev",

@@ -106,7 +106,11 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
         return false;
     }
 
-    private function getTranslation(string $trans): ?string
+    /**
+     * @param string $trans
+     * @return null|string
+     */
+    private function getTranslation(string $trans)
     {
         return $this->getContainer()->get('translator')->trans($trans);
     }
