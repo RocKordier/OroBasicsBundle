@@ -5,3 +5,5 @@
 /vendor
 build/
 /nbproject/
+components/
+composer.lock
