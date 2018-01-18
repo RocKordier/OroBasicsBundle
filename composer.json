@@ -11,20 +11,6 @@
             "homepage": "http://eric-hertwig.de"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "EHDev\\BasicsBundle\\": ""
-        }
-    },
-    "config" : {
-        "fxp-asset" : {
-            "enabled" : false
-        }
-    },
-    "require": {
-        "php": ">=7.0",
-        "oro/platform": "~2.3"
-    },
     "repositories": {
         "oro": {
             "type": "composer",
@@ -33,6 +19,23 @@
         "asset-packagist": {
             "type": "composer",
             "url": "https://asset-packagist.orocrm.com"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "EHDev\\BasicsBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.0",
+        "oro/platform": "~2.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "config" : {
+        "fxp-asset" : {
+            "enabled" : false
         }
     },
     "minimum-stability": "dev",

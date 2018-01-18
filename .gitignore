@@ -7,3 +7,4 @@ build/
 /nbproject/
 components/
 composer.lock
+/coverage

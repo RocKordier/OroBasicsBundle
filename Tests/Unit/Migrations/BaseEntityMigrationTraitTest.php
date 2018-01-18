@@ -1,28 +1,25 @@
 <?php
 namespace EHDev\BasicsBundle\Tests\Unit\Migrations;
 
+use EHDev\BasicsBundle\Tests\PHPUnitUtil;
 use PHPUnit\Framework\TestCase;
-use EHDev\BasicsBundle\Tests\Fixture\BaseMigration;
+use EHDev\BasicsBundle\Tests\Fixture\BaseEntityMigrationTraitTestClass;
 use Doctrine\DBAL\Schema\Table;
 
+/**
+ * @coversDefaultClass EHDev\BasicsBundle\Migrations\BaseEntityMigrationTrait
+ */
 class BaseEntityMigrationTraitTest extends TestCase
 {
-    /** @var BaseMigration */
-    private $testClass;
-
-    public function up()
-    {
-        $this->testClass = new BaseMigration();
-    }
-
     public function testMigrationTrait()
     {
-        $table = new Table();
+        try {
+            $table = new Table('TestTable');
+        } catch (\Exception $e) {
+            $this->markAsRisky();
+        }
+        $migrateBaseEntityMethod = PHPUnitUtil::callMethod(new BaseEntityMigrationTraitTestClass(), 'migrateBaseEntity', [$table]);
 
-        $reflection = new \ReflectionClass(get_class($this->testClass));
-        $method = $reflection->getMethod('migrateBaseEntity');
-        $method->setAccessible(true);
-
-        $result = $method->invokeArgs($this->testClass, [$table]);
+        $this->assertNull($migrateBaseEntityMethod);
     }
 }
