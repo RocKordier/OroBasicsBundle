@@ -16,9 +16,24 @@
             "EHDev\\BasicsBundle\\": ""
         }
     },
+    "config" : {
+        "fxp-asset" : {
+            "enabled" : false
+        }
+    },
     "require": {
         "php": ">=7.0",
         "oro/platform": "~2.3"
+    },
+    "repositories": {
+        "oro": {
+            "type": "composer",
+            "url": "https://packagist.orocrm.com"
+        },
+        "asset-packagist": {
+            "type": "composer",
+            "url": "https://asset-packagist.orocrm.com"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
