@@ -3,8 +3,6 @@ language: php
 php:
     - 7.0
     - 7.1
-    - 7.2
-    - nightly
 
 sudo: false
 
@@ -13,22 +11,19 @@ cache:
         - $HOME/.composer/cache
 
 env:
-    - COMPOSER_FLAGS="--prefer-dist"
+    - COMPOSER_FLAGS="--prefer-dist --optimize-autoloader --no-interaction --no-suggest"
 
 matrix:
     include:
         - php: 7.0
         - php: 7.1
-        - php: 7.1
-        - php: 7.2
-    allow_failures:
-        - php: nightly
 
 before_install:
     - composer self-update
     - phpenv config-rm xdebug.ini || true
 
-install: php -d memory_limit=-1 $(phpenv which composer) update $COMPOSER_FLAGS --no-suggest
+install:
+    - php -d memory_limit=-1 $(phpenv which composer) update $COMPOSER_FLAGS
 
 script:
     - if [ "$VALIDATE_DOCS" != true ]; then ./vendor/bin/phpunit; fi

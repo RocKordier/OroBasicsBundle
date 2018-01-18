@@ -1,5 +1,6 @@
 OroBasicsBundle
 =========
+[![Build Status](https://travis-ci.org/RocKordier/OroBasicsBundle.svg?branch=master)](https://travis-ci.org/RocKordier/OroBasicsBundle)
 [![Total Downloads](https://poser.pugx.org/ehdev/oro-basics-bundle/downloads)](https://packagist.org/packages/ehdev/oro-basics-bundle)
 [![Latest Unstable Version](https://poser.pugx.org/ehdev/oro-basics-bundle/v/unstable)](//packagist.org/packages/ehdev/oro-basics-bundle)
 [![Latest Stable Version](https://poser.pugx.org/ehdev/oro-basics-bundle/version)](https://packagist.org/packages/ehdev/oro-basics-bundle)
