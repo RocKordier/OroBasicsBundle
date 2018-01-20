@@ -3,7 +3,7 @@ namespace EHDev\BasicsBundle\Tests\Unit\Migrations;
 
 use Doctrine\DBAL\Types\DateTimeType;
 use Doctrine\DBAL\Types\IntegerType;
-use EHDev\BasicsBundle\Tests\PHPUnitUtil;
+use EHDev\Utility\CIUtility\Tests\Utility\PHPUnitUtil;
 use PHPUnit\Framework\TestCase;
 use EHDev\BasicsBundle\Tests\Fixture\BaseEntityMigrationTraitTestClass;
 use Doctrine\DBAL\Schema\Table;

@@ -4,7 +4,7 @@
     "homepage": "https://github.com/RocKordier/OroBasicsBundle",
     "keywords": ["Oro Platform", "Symfony2", "Basics"],
     "license": "OSL-3.0",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "authors": [
         {
             "name": "[RocKordier] Eric Hertwig",
@@ -31,7 +31,8 @@
         "oro/platform": "~2.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "ehdev/ciutility": "^0.0.1"
     },
     "config" : {
         "fxp-asset" : {
