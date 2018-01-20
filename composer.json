@@ -31,7 +31,8 @@
         "oro/platform": "~2.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "ehdev/ciutility": "^0.0.1"
     },
     "config" : {
         "fxp-asset" : {
