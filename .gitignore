@@ -8,3 +8,4 @@ build/
 components/
 composer.lock
 /coverage
+clover.xml
