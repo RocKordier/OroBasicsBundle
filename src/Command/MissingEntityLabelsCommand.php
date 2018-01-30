@@ -1,9 +1,11 @@
 <?php
 namespace EHDev\BasicsBundle\Command;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
+use Oro\Bundle\EntityConfigBundle\Exception\RuntimeException;
 use Oro\Bundle\EntityConfigBundle\Provider\ConfigProvider;
 use Oro\Bundle\UIBundle\Tools\EntityLabelBuilder;
 
@@ -61,26 +63,30 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             /** Check EntityLabel */
             $transKey = EntityLabelBuilder::getEntityLabelTranslationKey($className);
             if ($transKey == $this->getTranslation($transKey)) {
-                $untranslated[] = ['entity_label', $transKey];
+                $untranslated[] = ['entity_label', 'SYSTEM', $transKey];
             }
             /** Check EntityPluralLabel */
             $transKey = EntityLabelBuilder::getEntityPluralLabelTranslationKey($className);
             if ($transKey == $this->getTranslation($transKey)) {
-                $untranslated[] = ['entity_plural_label', $transKey];
+                $untranslated[] = ['entity_plural_label', 'SYSTEM', $transKey];
             }
 
             /** Check EntityProperties */
-            $fieldNames = $classMetaData->getFieldNames();
+            $fieldNames = array_merge($classMetaData->getFieldNames(), $classMetaData->getAssociationNames());
             foreach ($fieldNames as $fieldName) {
                 if(!$this->fieldIsTranslated($className, $fieldName)) {
-                    $untranslated[] = [$fieldName, EntityLabelBuilder::getFieldLabelTranslationKey($className, $fieldName)];
+                    $untranslated[] = [
+                        $fieldName,
+                        $this->getFieldDataType($className, $fieldName),
+                        EntityLabelBuilder::getFieldLabelTranslationKey($className, $fieldName)
+                    ];
                 }
             }
 
             if (count($untranslated) != 0) {
                 $io->section($className);
                 $io->table(
-                    ['Property', 'transKey'],
+                    ['Property', 'Data Type', 'transKey'],
                     $untranslated
                 );
             }
@@ -98,9 +104,13 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
         }
 
         /** Check label from entityConfig */
-        $transKey = $this->getConfigProvider()->getConfig($class, $fieldName)->get('label');
-        if ($transKey && $transKey != $this->getTranslation($transKey)) {
-            return true;
+        try {
+            $transKey = $this->getConfigProvider()->getConfig($class, $fieldName)->get('label');
+            if ($transKey && $transKey != $this->getTranslation($transKey)) {
+                return true;
+            }
+        } catch (RuntimeException $exception) {
+            return false;
         }
 
         return false;
@@ -127,12 +137,29 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
     private function getAllConfiguredEntities(): array
     {
+        return $this->getEntityConfigModelRepository()
+                    ->findBy([], ['className' => 'ASC']);
+    }
+
+    private function getFieldDataType(string $className, string $fieldName): string
+    {
+        /** @var EntityConfigModel $entity */
+        $entity = $this->getEntityConfigModelRepository()->findOneBy(['className' => $className]);
+
+        if ($field = $entity->getField($fieldName)) {
+            return $this->getTranslation('oro.entity_extend.form.data_type.'.$field->getType());
+        }
+
+        return 'NOT IN DATABASE';
+    }
+
+    private function getEntityConfigModelRepository(): ObjectRepository
+    {
         /** seams bit hacky, but the entity is disabled in the chain configured namespaces */
         return
             $this->getContainer()
                 ->get('doctrine')
                 ->getManagerForClass(self::ENTITY_CLASS_NAME)
-                ->getRepository(self::ENTITY_CLASS_NAME)
-                ->findBy([], ['className' => 'ASC']);
+                ->getRepository(self::ENTITY_CLASS_NAME);
     }
 }
