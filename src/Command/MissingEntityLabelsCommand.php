@@ -155,11 +155,9 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
     private function getEntityConfigModelRepository(): ObjectRepository
     {
-        /** seams bit hacky, but the entity is disabled in the chain configured namespaces */
         return
             $this->getContainer()
-                ->get('doctrine')
-                ->getManagerForClass(self::ENTITY_CLASS_NAME)
+                ->get('doctrine')->getManager('config')
                 ->getRepository(self::ENTITY_CLASS_NAME);
     }
 }
