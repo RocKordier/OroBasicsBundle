@@ -46,6 +46,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
     {
         $io = new SymfonyStyle($input, $output);
         $io->title('Untranslated Strings');
+        $success = true;
 
         /** @var EntityConfigModel $item */
         foreach ($this->getAllConfiguredEntities() as $item) {
@@ -89,7 +90,13 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
                     ['Property', 'Data Type', 'transKey'],
                     $untranslated
                 );
+
+                $success = false;
             }
+        }
+
+        if($success) {
+            $io->success('Congratulations, every entity and property should has a translation');
         }
 
         return 0;
