@@ -2,12 +2,12 @@
 namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Oro\Bundle\OrganizationBundle\Entity\BusinessUnit;
-use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
 trait BUOwnerTrait
 {
+    use OrganizationOwnerTrait;
+
     /**
      * @var BusinessUnit
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\BusinessUnit")
@@ -16,16 +16,6 @@ trait BUOwnerTrait
     protected $owner;
 
     /**
-     * @var Organization
-     *
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\OrganizationBundle\Entity\Organization")
-     * @ORM\JoinColumn(name="organization_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $organization;
-
-    /**
-     * Set a business unit owning this report
-     *
      * @param BusinessUnit $businessUnit
      *
      * @return self
@@ -43,29 +33,5 @@ trait BUOwnerTrait
     public function getOwner()
     {
         return $this->owner;
-    }
-
-    /**
-     * Set organization
-     *
-     * @param  Organization $organization
-     *
-     * @return self
-     */
-    public function setOrganization(Organization $organization = null)
-    {
-        $this->organization = $organization;
-
-        return $this;
-    }
-
-    /**
-     * Get organization
-     *
-     * @return Organization|null
-     */
-    public function getOrganization()
-    {
-        return $this->organization;
     }
 }
