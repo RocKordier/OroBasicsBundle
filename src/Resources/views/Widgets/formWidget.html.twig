@@ -1,0 +1,44 @@
+{% set formAction = form.vars.value.id ? pathUpdate : pathCreate %}
+
+<div class="widget-content">
+    {% if savedId is defined and savedId %}
+        <script type="text/javascript">
+            require(['underscore', 'orotranslation/js/translator', 'oroui/js/widget-manager',
+                    'oroui/js/messenger', 'oroui/js/mediator'],
+                function(_, __, widgetManager, messenger, mediator) {
+                    widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function(widget) {
+                        messenger.notificationFlashMessage('success', __('Saved'));
+                        mediator.trigger('widget_success:' + widget.getAlias());
+                        mediator.trigger('widget_success:' + widget.getWid());
+                        widget.remove();
+                    });
+
+                    {% block requireAction %} {% endblock %}
+                });
+        </script>
+    {% else %}
+    {% if not form.vars.valid and form.vars.errors|length %}
+        <div class="alert alert-error">
+            <div class="message">
+                {{ form_errors(form) }}
+            </div>
+        </div>
+    {% endif %}
+        <div class="form-container">
+            <form id="{{ form.vars.id }}" name="{{ form.vars.name }}" action="{{ formAction }}" method="post">
+                <fieldset class="form form-horizontal">
+                    {% block form %}
+                        {{ form_rest(form) }}
+                    {% endblock %}
+                    <div class="widget-actions form-actions">
+                        {% block formActionButtons %}
+                            <button class="btn" type="reset">{{ 'Cancel'|trans }}</button>
+                            <button class="btn btn-primary" type="submit">{{ 'Save'|trans }}</button>
+                        {% endblock %}
+                    </div>
+                </fieldset>
+            </form>
+            {{ oro_form_js_validation(form) }}
+        </div>
+    {% endif %}
+</div>
