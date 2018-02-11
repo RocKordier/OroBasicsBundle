@@ -27,7 +27,8 @@
     },
     "require": {
         "php": ">=7.0",
-        "oro/platform": "~2.3"
+        "oro/platform": "~2.3",
+        "juanparati/emoji": "@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5",
