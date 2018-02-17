@@ -23,7 +23,7 @@ class LifecycleTraitTest extends TestCase
     {
         $this->testClass->prePersist();
 
-        $this->assertInstanceof(\DateTime::class, $this->testClass->getCreatedAt());
+        $this->assertInstanceOf(\DateTime::class, $this->testClass->getCreatedAt());
         $this->assertEquals($this->testClass->getCreatedAt(), $this->testClass->getUpdatedAt());
     }
 
