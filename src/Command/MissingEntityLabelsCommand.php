@@ -74,6 +74,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
             /** Check EntityProperties */
             $fieldNames = array_merge($classMetaData->getFieldNames(), $classMetaData->getAssociationNames());
+            $fieldNames = array_merge($fieldNames, $this->getVirtualChainProvider()->getVirtualFields($className));
             foreach ($fieldNames as $fieldName) {
                 if(!$this->fieldIsTranslated($className, $fieldName)) {
                     $untranslated[] = [
@@ -146,6 +147,11 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
     {
         return $this->getEntityConfigModelRepository()
                     ->findBy([], ['className' => 'ASC']);
+    }
+
+    private function getVirtualChainProvider()
+    {
+        return $this->getContainer()->get('oro_entity.virtual_field_provider');
     }
 
     private function getFieldDataType(string $className, string $fieldName): string
