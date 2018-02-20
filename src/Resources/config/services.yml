@@ -1,0 +1,13 @@
+services:
+
+    ehdev.orobasics.property_translation.manager:
+        class: EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager
+        arguments:
+            - '@translator.default'
+
+    ehdev.orobasics.provider.entity_property_translation_provider:
+        class: EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider
+        arguments:
+            - '@doctrine'
+            - '@oro_entity.virtual_field_provider'
+            - '@ehdev.orobasics.property_translation.manager'
