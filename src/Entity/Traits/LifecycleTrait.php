@@ -14,7 +14,13 @@ trait LifecycleTrait
      */
     public function prePersist()
     {
-        $this->createdAt = $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
+        $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        if(!$this->createdAt) {
+            $this->createdAt = $dateTime;
+        }
+
+        $this->updatedAt = $dateTime;
     }
 
     /**
