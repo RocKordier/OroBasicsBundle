@@ -3,3 +3,8 @@ services:
         class: EHDev\BasicsBundle\Form\Type\OroUserEmailOriginSelectType
         tags:
             - { name: form.type, alias: ehdev_oro_user_email_origin_select }
+
+    ehdev_basics.form.type.oro_mailbox_select:
+        class: EHDev\BasicsBundle\Form\Type\OroMailboxSelectType
+        tags:
+            - { name: form.type, alias: ehdev_oro_mailbox_select }
