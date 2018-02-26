@@ -13,6 +13,7 @@ class OroMailboxSelectType extends AbstractType
         $resolver->setDefaults(
             [
                 'class' => Mailbox::class,
+                'required' => false,
             ]
         );
     }
