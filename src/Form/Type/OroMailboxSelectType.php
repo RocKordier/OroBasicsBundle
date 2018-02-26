@@ -14,6 +14,9 @@ class OroMailboxSelectType extends AbstractType
             [
                 'class' => Mailbox::class,
                 'required' => false,
+                'choice_value' => function (Mailbox $mailbox = null) {
+                    return $mailbox ? $mailbox->getId() : null;
+                },
             ]
         );
     }
