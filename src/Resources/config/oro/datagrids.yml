@@ -1,0 +1,3 @@
+imports:
+    - { resource: 'dg/oro-user-email-origin.yml' }
+

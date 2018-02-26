@@ -1,0 +1,18 @@
+datagrids:
+    ehdev-basics-oro-user-email-origin:
+        extended_entity_name: Oro\Bundle\ImapBundle\Entity\UserEmailOrigin
+        source:
+            type: orm
+            query:
+                select:
+                    - ueo.id
+                    - ueo.mailboxName
+                    - ueo.isActive
+                    - ueo.user
+                from:
+                    - { table: Oro\Bundle\ImapBundle\Entity\UserEmailOrigin, alias: ueo }
+        columns:
+            id: { label: ehdev.basics.oro_user_email_origin.id.label}
+            mailboxName: { label: ehdev.basics.oro_user_email_origin.mailbox_name.label }
+            isActive: { label: ehdev.basics.oro_user_email_origin.is_active.label }
+            user: { label: ehdev.basics.oro_user_email_origin.user.label }
