@@ -9,6 +9,10 @@ system_configuration:
             title: ehdev.basics.system_configuration.groups.google_maps_key.title
             priority: 50
             tooltip: ehdev.basics.system_configuration.groups.google_maps_key.tooltip
+        ehdev_basics_oro_overrides:
+            title: ehdev.basics.system_configuration.groups.oro_overrides.title
+        ehdev_basics_oro_overrides_mailbundle:
+            title: ehdev.basics.system_configuration.groups.oro_overrides_mailbundle.title
 
     fields:
         ehdev_basics.googlemaps_api_key:
@@ -20,11 +24,27 @@ system_configuration:
                 resettable: false
                 required: false
             priority: 30
+        ehdev_basics.allow_html_tags_mail:
+            data_type: boolean
+            type: oro_config_checkbox
+            ui_only: true
+            options:
+                label: ehdev.basics.system_configuration.groups.allow_html_tags_mail.title
+                resettable: false
+                required: false
+                tooltip: ehdev.basics.system_configuration.groups.allow_html_tags_mail.tooltip
 
     tree:
         system_configuration:
             platform:
                 children:
+                    ehdev_basics_settings:
+                        children:
+                            ehdev_basics_oro_overrides:
+                                children:
+                                    ehdev_basics_oro_overrides_mailbundle:
+                                        children:
+                                            - ehdev_basics.allow_html_tags_mail
                     integrations:
                         children:
                             ehdev_basics_apikeys:

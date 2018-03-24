@@ -20,6 +20,13 @@ class Configuration implements ConfigurationInterface
             ],
         ]);
 
+        SettingsBuilder::append($rootNode, [
+            'allow_html_tags_mail' => [
+                'value' => false,
+                'type' => 'boolean',
+            ]
+        ]);
+
         return $treeBuilder;
     }
 }
