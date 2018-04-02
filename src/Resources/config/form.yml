@@ -8,3 +8,18 @@ services:
         class: EHDev\BasicsBundle\Form\Type\OroMailboxSelectType
         tags:
             - { name: form.type, alias: ehdev_oro_mailbox_select }
+
+    ehdev_basics.form.extension.text_filter_type:
+        class: EHDev\BasicsBundle\Form\Extension\TextFilterTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Oro\Bundle\FilterBundle\Form\Type\Filter\TextFilterType }
+
+    ehdev_basics.form.extension.number_filter_type:
+        class: EHDev\BasicsBundle\Form\Extension\NumberFilterTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Oro\Bundle\FilterBundle\Form\Type\Filter\NumberFilterType }
+
+    ehdev_basics.form.extension.number_range_filter_type:
+        class: EHDev\BasicsBundle\Form\Extension\NumberRangeFilterTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Oro\Bundle\FilterBundle\Form\Type\Filter\NumberRangeFilterType }
