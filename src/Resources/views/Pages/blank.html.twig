@@ -1,0 +1,48 @@
+{% extends bap.layout %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% block content %}
+    <div class="layout-content"
+            {% if pageComponent is defined %}{{ UI.renderPageComponentAttributes(pageComponent) }}{% endif %}
+    >
+        <div class="container-fluid page-title">
+            <div class="navigation clearfix navbar-extra navbar-extra-right">
+                <div class="row">
+                    {% set actionButtons %}
+                        <div class="pull-right">
+                            <div class="pull-right user-info-state">
+                                <div class="inline-decorate-container">
+                                    <ul class="inline-decorate">
+                                        {% block pageActions %}
+                                        {% endblock pageActions %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endset %}
+                    {%  if not isMobileVersion() %}
+                        {{ actionButtons }}
+                    {%  endif %}
+                    <div class="pull-left-extra">
+                        {% block pageHeader %}
+                        {% endblock pageHeader %}
+                    </div>
+                    {%  if isMobileVersion() %}
+                        {{ actionButtons }}
+                    {%  endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="layout-content scrollable-container">
+            {% block content_data %}
+                {% if data is defined and data.dataBlocks is defined %}
+                    {% set dataBlocks = data.dataBlocks %}
+
+                    {% set data = data|merge({'dataBlocks': dataBlocks}) %}
+                {% endif %}
+                {{ UI.scrollData(id, data, null) }}
+            {% endblock content_data %}
+        </div>
+    </div>
+{% endblock content %}
