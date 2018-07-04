@@ -4,10 +4,11 @@
                 'oroui/js/messenger', 'oroui/js/mediator'],
             function(_, __, widgetManager, messenger, mediator) {
                 widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function(widget) {
-                    {% block requireAction %} {% endblock %}
-                    mediator.trigger('widget_success:' + widget.getAlias());
-                    mediator.trigger('widget_success:' + widget.getWid());
-                    widget.remove();
+                    {% block requireAction %}
+                        mediator.trigger('widget_success:' + widget.getAlias());
+                        mediator.trigger('widget_success:' + widget.getWid());
+                        widget.remove();
+                    {% endblock %}
                 });
             });
     </script>

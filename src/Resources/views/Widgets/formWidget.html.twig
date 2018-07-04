@@ -17,13 +17,21 @@
                 });
         </script>
     {% else %}
-    {% if not form.vars.valid and form.vars.errors|length %}
-        <div class="alert alert-error">
-            <div class="message">
-                {{ form_errors(form) }}
+        <script type="text/javascript">
+            require(['underscore', 'orotranslation/js/translator', 'oroui/js/widget-manager',
+                    'oroui/js/messenger', 'oroui/js/mediator'],
+                function(_, __, widgetManager, messenger, mediator) {
+                    {% block requireAction %} {% endblock %}
+                });
+        </script>
+
+        {% if not form.vars.valid and form.vars.errors|length %}
+            <div class="alert alert-error">
+                <div class="message">
+                    {{ form_errors(form) }}
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
         <div class="form-container">
             <form id="{{ form.vars.id }}" name="{{ form.vars.name }}" action="{{ formAction }}" method="post">
                 <fieldset class="form form-horizontal">
