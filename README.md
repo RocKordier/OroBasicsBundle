@@ -16,7 +16,7 @@ With composer, add:
 ```json
 {
     "require" : {
-        "ehdev/oro-basics-bundle": "*"
+        "ehdev/oro-basics-bundle": "^0.1"
     }
 }
 ```
