@@ -4,6 +4,9 @@ namespace EHDev\BasicsBundle\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 
+/**
+ * @deprecated This Trait is deprecated. Please use the Oro\Bundle\OrganizationBundle\Entity\Ownership\OrganizationAwareTrait instead!
+ */
 trait OrganizationOwnerTrait
 {
     /**
