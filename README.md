@@ -23,4 +23,4 @@ With composer, add:
 
 Components
 ----------
-[Commands](./Resources/doc/Commands.md)
+[Commands](./src/Resources/doc/Commands.md)
