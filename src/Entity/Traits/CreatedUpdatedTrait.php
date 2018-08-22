@@ -2,6 +2,7 @@
 namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
 trait CreatedUpdatedTrait
@@ -11,6 +12,7 @@ trait CreatedUpdatedTrait
      *
      * @var \DateTime $created
      * @ORM\Column(type="datetime", name="created_at")
+     * @Gedmo\Timestampable(on="create")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={
@@ -25,6 +27,7 @@ trait CreatedUpdatedTrait
      *
      * @var \DateTime $updated
      * @ORM\Column(type="datetime", name="updated_at")
+     * @Gedmo\Timestampable(on="update")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={

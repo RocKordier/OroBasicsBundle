@@ -8,7 +8,7 @@ trait OrganizationOwnerMigrationTrait
 {
     private static function migrateOrganizationOwner(Table $table, Schema $schema)
     {
-        $table->addColumn('organization_id', 'integer', ['notnull' => false]);        $table->addIndex(['organization_id']);
+        $table->addColumn('organization_id', 'integer', ['notnull' => false]);
         $table->addIndex(['organization_id']);
 
         $table->addForeignKeyConstraint(

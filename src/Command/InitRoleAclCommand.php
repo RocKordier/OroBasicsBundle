@@ -16,13 +16,17 @@ use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
 class InitRoleAclCommand extends ContainerAwareCommand
 {
-    const NAME = 'ehdev:initRoleAcl';
+    private const NAME = 'ehdev:init-role-acl';
 
     protected function configure()
     {
         $this
             ->setName(self::NAME)
-            ->setDescription('Init Oro Roles and Acls');
+            ->setDescription('Init Oro Roles and Acls')
+            ->setAliases([
+                'ehdev:initRoleAcl'
+            ])
+        ;
     }
 
     /**
