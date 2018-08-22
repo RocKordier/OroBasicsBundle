@@ -14,6 +14,8 @@ trait LifecycleTrait
      */
     public function prePersist()
     {
+        trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', E_USER_DEPRECATED);
+
         $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
 
         if(!$this->createdAt) {
@@ -30,6 +32,8 @@ trait LifecycleTrait
      */
     public function preUpdate()
     {
+        trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', E_USER_DEPRECATED);
+
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 }
