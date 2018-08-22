@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class MissingEntityLabelsCommand extends ContainerAwareCommand
 {
-    const NAME = 'ehdev:missingEntityLabels';
+    const NAME = 'ehdev:missing-entity-labels';
     const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
     const OPTION_IGNORE_ORO = 'ignore-oro';
     const OPTION_IGNORE_EXTEND = 'ignore-extend';
@@ -45,6 +45,9 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
                 InputOption::VALUE_NONE,
                 'Show all properties'
             )
+            ->setAliases([
+                'ehdev:missingEntityLabels'
+            ])
         ;
     }
 
