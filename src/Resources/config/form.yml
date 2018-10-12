@@ -23,3 +23,8 @@ services:
         class: EHDev\BasicsBundle\Form\Extension\NumberRangeFilterTypeExtension
         tags:
             - { name: form.type_extension, extended_type: Oro\Bundle\FilterBundle\Form\Type\Filter\NumberRangeFilterType }
+
+    ehdev_basics.form.extension.date_range_filter_type:
+        class: EHDev\BasicsBundle\Form\Extension\DateRangeFilterTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Oro\Bundle\FilterBundle\Form\Type\Filter\DateRangeFilterType }
