@@ -57,6 +57,9 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
         $io->title('Untranslated Strings');
         $all = $input->getOption(self::OPTION_SHOW_ALL);
 
+        $missingCount = 0;
+        $entityCount = 0;
+
         /** @var EntityConfigModel $item */
         foreach ($this->getAllConfiguredEntities() as $item) {
             $className = $item->getClassName();
@@ -84,15 +87,25 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             }
 
             if (count($translationsArray) != 0) {
-                $io->section($className);
+                $io->section(sprintf('Found %s missing labels in %s', count($translationsArray), $className));
                 $io->table(
                     ['Property', 'Data Type', 'Status', 'transKey'],
                     $translationsArray
                 );
+
+                $entityCount++;
             }
+
+            $missingCount += count($translationsArray);
         }
 
-        return 0;
+        if (0 === $missingCount) {
+            return 0;
+        }
+
+        $io->error(sprintf('%s missing Labels found for %s Entities', $missingCount, $entityCount));
+
+        return 1;
     }
 
     private function getEntityPropertyTranslationProvider(): EntityPropertyTranslationProvider
