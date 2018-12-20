@@ -8,7 +8,10 @@ use EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider;
 use Juanparati\Emoji\Emoji;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
 
+use Oro\Bundle\LocaleBundle\Entity\Localization;
+use Oro\Bundle\LocaleBundle\Entity\Repository\LocalizationRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,6 +23,8 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
     const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
     const OPTION_IGNORE_ORO = 'ignore-oro';
     const OPTION_IGNORE_EXTEND = 'ignore-extend';
+    const OPTION_LOCALES = 'for-locale';
+    const OPTION_ENTITY = 'entity';
     const OPTION_SHOW_ALL = 'all';
 
     protected function configure()
@@ -45,6 +50,19 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
                 InputOption::VALUE_NONE,
                 'Show all properties'
             )
+            ->addOption(
+                self::OPTION_LOCALES,
+                null,
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Locales',
+                ['en']
+            )
+            ->addOption(
+                self::OPTION_ENTITY,
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'for specific entity'
+            )
             ->setAliases([
                 'ehdev:missingEntityLabels'
             ])
@@ -56,47 +74,64 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         $io->title('Untranslated Strings');
         $all = $input->getOption(self::OPTION_SHOW_ALL);
+        $locales = $input->getOption(self::OPTION_LOCALES);
+
+        $this->checkForActiveLanguages($locales, $io);
 
         $missingCount = 0;
         $entityCount = 0;
 
         /** @var EntityConfigModel $item */
         foreach ($this->getAllConfiguredEntities() as $item) {
+            $translations = [];
             $className = $item->getClassName();
+
+            $entity = $input->getOption(self::OPTION_ENTITY);
 
             if (
                 ($input->getOption(self::OPTION_IGNORE_ORO) && preg_match('/^Oro[^s]/i', $className)) ||
-                ($input->getOption(self::OPTION_IGNORE_EXTEND) && preg_match('/^Extend[^s]/i', $className))
+                ($input->getOption(self::OPTION_IGNORE_EXTEND) && preg_match('/^Extend[^s]/i', $className)) ||
+                ($entity !== $className && !is_null($entity))
             ) {
                 continue;
             }
 
-            $translations = $this->getEntityPropertyTranslationProvider()->getTranslations($item);
+            $translations = $this->getEntityPropertyTranslationProvider()->getTranslations($item, $locales);
+            $translations = array_filter($translations, function (PropertyTranslation $translation) use ($all) {
+                return $all || !$translation->isPartialTranslatied();
+            });
 
-            $translationsArray = [];
+            $missingTranslations = array_filter($translations, function (PropertyTranslation $translation) {
+                return !$translation->isPartialTranslatied();
+            });
+
+            /** @var Table $tableHelper */
+            $tableHelper = new Table($output);
+            $tableHelper->setHeaders( array_merge(['Property', 'Data Type'],$locales,['transKey']));
+
             /** @var PropertyTranslation $translation */
             foreach ($translations as $translation) {
-                if($all || !$translation->isTranslated()){
-                    $translationsArray[] = [
-                        $translation->getPropertyName(),
-                        $translation->getFieldType(),
-                        $translation->isTranslated() ? Emoji::char('white heavy check mark') : Emoji::char('cross mark'),
-                        $translation->getTranslationKey()
-                    ];
+                $row = [
+                    $translation->getPropertyName(),
+                    $translation->getFieldType(),
+                ];
+                foreach ($locales as $locale) {
+                    array_push($row, $translation->isTranslated($locale)? Emoji::char('white heavy check mark') : Emoji::char('cross mark'));
                 }
+                array_push($row, $translation->getTranslationKey());
+                $tableHelper->addRow($row);
             }
 
-            if (count($translationsArray) != 0) {
-                $io->section(sprintf('Found %s missing labels in %s', count($translationsArray), $className));
-                $io->table(
-                    ['Property', 'Data Type', 'Status', 'transKey'],
-                    $translationsArray
-                );
+            $io->section(sprintf('Found %s missing labels in %s', count($missingTranslations), $className));
+            $tableHelper->setStyle('symfony-style-guide');
+            $tableHelper->render();
+            $io->newLine(2);
 
+            if(count($missingTranslations) > 0) {
                 $entityCount++;
             }
 
-            $missingCount += count($translationsArray);
+            $missingCount += count($missingTranslations);
         }
 
         if (0 === $missingCount) {
@@ -106,6 +141,26 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
         $io->error(sprintf('%s missing Labels found for %s Entities', $missingCount, $entityCount));
 
         return 1;
+    }
+
+    private function checkForActiveLanguages(array $locales, SymfonyStyle $io): void
+    {
+        $availableLanguageCodes = [];
+        /** @var Localization $item */
+        foreach ($this->getLocalizationRepository()->findAll() as $item) {
+            $availableLanguageCodes[] = $item->getLanguage()->getCode();
+        }
+
+        $notActiveLocales = array_filter($locales, function (string $locale) use ($availableLanguageCodes) {
+            return !in_array($locale, $availableLanguageCodes, true);
+        });
+
+        if($notActiveLocales) {
+            $io->warning(
+                sprintf('Some locales are not activated in Oro yet so that can cause to some problems. %s',
+                    join(", ", $notActiveLocales) )
+            );
+        }
     }
 
     private function getEntityPropertyTranslationProvider(): EntityPropertyTranslationProvider
@@ -125,5 +180,12 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             $this->getContainer()
                 ->get('doctrine')->getManager('config')
                 ->getRepository(self::ENTITY_CLASS_NAME);
+    }
+
+    private function getLocalizationRepository(): LocalizationRepository
+    {
+        return
+            $this->getContainer()
+                ->get('doctrine')->getRepository(Localization::class);
     }
 }

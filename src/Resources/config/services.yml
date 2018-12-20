@@ -3,7 +3,7 @@ services:
     ehdev.orobasics.property_translation.manager:
         class: EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager
         arguments:
-            - '@translator.default'
+            - '@translator'
 
     ehdev.orobasics.provider.entity_property_translation_provider:
         class: EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider

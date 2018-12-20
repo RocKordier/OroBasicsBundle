@@ -28,7 +28,7 @@ class EntityPropertyTranslationProvider
         $this->propertyTranslationManager = $propertyTranslationManager;
     }
 
-    public function getTranslations(EntityConfigModel $configModel): array
+    public function getTranslations(EntityConfigModel $configModel, array $locales): array
     {
         $className = $configModel->getClassName();
         $classMetaData = $this->getClassMetaData($className);
@@ -37,20 +37,24 @@ class EntityPropertyTranslationProvider
         $properties[] = $this->propertyTranslationManager->createPropertyTranslation(
             'entity_label',
             EntityLabelBuilder::getEntityLabelTranslationKey($className),
-            'SYSTEM'
+            'SYSTEM',
+            $locales
         );
         $properties[] = $this->propertyTranslationManager->createPropertyTranslation(
             'entity_plural_label',
             EntityLabelBuilder::getEntityPluralLabelTranslationKey($className),
-            'SYSTEM'
+            'SYSTEM',
+            $locales
         );
 
         $propertyNames = $this->getPropertyNames($classMetaData, $className);
+
         foreach($propertyNames as $propertyName) {
             $properties[] = $this->propertyTranslationManager->createPropertyTranslation(
                 $propertyName,
                 EntityLabelBuilder::getFieldLabelTranslationKey($className, $propertyName),
-                $this->getFieldDataType($className, $propertyName)
+                $this->getFieldDataType($className, $propertyName),
+                $locales
             );
         }
 

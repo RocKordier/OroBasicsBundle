@@ -1,6 +1,8 @@
 <?php
 namespace EHDev\BasicsBundle\Model;
 
+use Symfony\Component\Translation\MessageCatalogueInterface;
+
 class PropertyTranslation
 {
     /** @var string */
@@ -14,6 +16,9 @@ class PropertyTranslation
 
     /** @var string */
     private $fieldType;
+
+    /** @var MessageCatalogueInterface[] */
+    private $catalogues;
 
     /**
      * @return string
@@ -54,19 +59,13 @@ class PropertyTranslation
     /**
      * @return string
      */
-    public function getTranslation(): string
+    public function getTranslation(string $locale): string
     {
-        return $this->translation;
-    }
+        if(array_key_exists($locale, $this->catalogues)) {
+            return $this->catalogues[$locale]->get($this->translationKey);
+        }
 
-    /**
-     * @param string $translation
-     * @return PropertyTranslation
-     */
-    public function setTranslation(string $translation): PropertyTranslation
-    {
-        $this->translation = $translation;
-        return $this;
+        return $this->translationKey;
     }
 
     /**
@@ -87,8 +86,34 @@ class PropertyTranslation
         return $this;
     }
 
-    public function isTranslated(): bool
+    /**
+     * @return bool
+     */
+    public function isTranslated(string $locale): bool
     {
-        return !($this->getTranslationKey() === $this->getTranslation());
+        if(array_key_exists($locale, $this->catalogues)) {
+            return $this->catalogues[$locale]->has($this->translationKey);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param MessageCatalogueInterface $catalogue
+     */
+    public function addCatalogue(MessageCatalogueInterface $catalogue, string $locale)
+    {
+        $this->catalogues[$locale] = $catalogue;
+    }
+
+    public function isPartialTranslatied(): bool
+    {
+        foreach($this->catalogues as $locale => $_) {
+            if(!$this->isTranslated($locale)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
