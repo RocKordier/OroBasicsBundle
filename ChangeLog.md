@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.x
+
+- Add new AbstractEnumFixture, which supports to create or update enum options.
+
 ## v0.1.0
 
 - Deprecate the UserAwareTrait, BUOwnerTrait and OrganizationOwnerTrait.
