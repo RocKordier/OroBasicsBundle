@@ -11,3 +11,14 @@ services:
             - '@doctrine'
             - '@oro_entity.virtual_field_provider'
             - '@ehdev.orobasics.property_translation.manager'
+
+
+    ehdev.message_queue.ensure_user_extension:
+        class: EHDev\BasicsBundle\MessageQueue\Extension\EnsureUserExtension
+        public: false
+        arguments:
+            - '@oro_config.organization'
+            - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
+        tags:
+            - { name: oro_message_queue.consumption.extension }
