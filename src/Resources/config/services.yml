@@ -12,7 +12,6 @@ services:
             - '@oro_entity.virtual_field_provider'
             - '@ehdev.orobasics.property_translation.manager'
 
-
     ehdev.message_queue.ensure_user_extension:
         class: EHDev\BasicsBundle\MessageQueue\Extension\EnsureUserExtension
         public: false

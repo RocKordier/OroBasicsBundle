@@ -17,5 +17,3 @@ ehdev:
             is_active.label: Active?
             user.label: Imap User
             entity_label: '[Oro] User EMail Origin'
-
-

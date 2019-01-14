@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\MessageQueue\Extension;
@@ -13,7 +14,7 @@ use Oro\Component\MessageQueue\Consumption\AbstractExtension;
 use Oro\Component\MessageQueue\Consumption\Context;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class EnsureUserExtension extends AbstractExtension
+class SecurityExtension extends AbstractExtension
 {
     /**
      * @var ConfigManager

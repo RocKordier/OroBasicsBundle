@@ -1,12 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Tests\Unit\MessageQueue\Extension;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use EHDev\BasicsBundle\Exception\InvalidUserException;
-use EHDev\BasicsBundle\MessageQueue\Extension\EnsureUserExtension;
+use EHDev\BasicsBundle\MessageQueue\Extension\SecurityExtension;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\SecurityBundle\Authentication\Token\ConsoleToken;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Oro\Component\MessageQueue\Consumption\Context;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class EnsureUserExtensionTest extends TestCase
+class SecurityExtensionTest extends TestCase
 {
     /**
      * @var ConfigManager
@@ -36,7 +36,7 @@ class EnsureUserExtensionTest extends TestCase
     private $tokenStorage;
 
     /**
-     * @var EnsureUserExtension
+     * @var SecurityExtension
      */
     private $extension;
 
@@ -46,7 +46,7 @@ class EnsureUserExtensionTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->tokenStorage  = $this->prophesize(TokenStorageInterface::class);
 
-        $this->extension = new EnsureUserExtension(
+        $this->extension = new SecurityExtension(
             $this->configManager->reveal(),
             $this->entityManager->reveal(),
             $this->tokenStorage->reveal()
