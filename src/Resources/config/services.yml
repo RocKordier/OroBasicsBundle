@@ -13,10 +13,10 @@ services:
             - '@ehdev.orobasics.property_translation.manager'
 
     ehdev.message_queue.ensure_user_extension:
-        class: EHDev\BasicsBundle\MessageQueue\Extension\EnsureUserExtension
+        class: EHDev\BasicsBundle\MessageQueue\Extension\SecurityExtension
         public: false
         arguments:
-            - '@oro_config.organization'
+            - '@oro_config.manager'
             - '@doctrine.orm.entity_manager'
             - '@security.token_storage'
         tags:
