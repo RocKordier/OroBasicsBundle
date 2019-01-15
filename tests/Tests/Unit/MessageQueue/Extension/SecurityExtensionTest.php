@@ -104,9 +104,6 @@ class SecurityExtensionTest extends TestCase
             ->get('ehdev_basics.bg_username')
             ->willReturn(false);
 
-        $this->configManager->get(Argument::any())
-            ->shouldNotBeCalled();
-
         $context = $this->prophesize(Context::class);
         $context->getLogger()->willReturn(new NullLogger());
         $this->extension->onPreReceived($context->reveal());
