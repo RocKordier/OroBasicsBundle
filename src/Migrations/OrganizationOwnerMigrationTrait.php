@@ -18,5 +18,4 @@ trait OrganizationOwnerMigrationTrait
             ['onUpdate' => null, 'onDelete' => 'SET NULL']
         );
     }
-
 }

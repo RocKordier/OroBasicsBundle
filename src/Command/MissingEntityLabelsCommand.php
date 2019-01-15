@@ -107,7 +107,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
             /** @var Table $tableHelper */
             $tableHelper = new Table($output);
-            $tableHelper->setHeaders( array_merge(['Property', 'Data Type'],$locales,['transKey']));
+            $tableHelper->setHeaders(array_merge(['Property', 'Data Type'], $locales, ['transKey']));
 
             /** @var PropertyTranslation $translation */
             foreach ($translations as $translation) {
@@ -127,7 +127,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             $tableHelper->render();
             $io->newLine(2);
 
-            if(count($missingTranslations) > 0) {
+            if (count($missingTranslations) > 0) {
                 $entityCount++;
             }
 
@@ -155,10 +155,12 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             return !in_array($locale, $availableLanguageCodes, true);
         });
 
-        if($notActiveLocales) {
+        if ($notActiveLocales) {
             $io->warning(
-                sprintf('Some locales are not activated in Oro yet so that can cause to some problems. %s',
-                    join(", ", $notActiveLocales) )
+                sprintf(
+                    'Some locales are not activated in Oro yet so that can cause to some problems. %s',
+                    join(", ", $notActiveLocales)
+                )
             );
         }
     }
