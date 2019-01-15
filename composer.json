@@ -27,7 +27,7 @@
     },
     "require": {
         "php": ">=7.0",
-        "oro/platform": "~2.3",
+        "oro/platform": "^2.3 | ^2.6 | ^3.1",
         "juanparati/emoji": "@dev",
         "gedmo/doctrine-extensions": "^2.4",
         "stof/doctrine-extensions-bundle": "^1.2"
