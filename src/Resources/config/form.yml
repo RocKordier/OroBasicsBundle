@@ -3,21 +3,24 @@ services:
         class: EHDev\BasicsBundle\Form\Type\OroUserEmailOriginSelectType
         tags:
             - { name: form.type, alias: ehdev_oro_user_email_origin_select }
+            - { name: form.type, alias: EHDev\BasicsBundle\Form\Type\OroUserEmailOriginSelectType }
 
     ehdev_basics.form.type.oro_mailbox_select:
         class: EHDev\BasicsBundle\Form\Type\OroMailboxSelectType
         tags:
             - { name: form.type, alias: ehdev_oro_mailbox_select }
+            - { name: form.type, alias: EHDev\BasicsBundle\Form\Type\OroMailboxSelectType }
 
     ehdev_basics.form.type.oro_username_choice:
         class: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType
         tags:
-            - { name: form.type, alias: ehdev_oro_username_choice }
+            - { name: form.type, alias: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType }
 
     ehdev_basics.form.type.oro_organization_choice:
         class: EHDev\BasicsBundle\Form\Type\OroOrganizationChoiceType
         tags:
-            - { name: form.type, alias: ehdev_oro_organization_choice }
+            - { name: form.type, alias: EHDev\BasicsBundle\Form\Type\OroOrganizationChoiceType }
+
 
     ehdev_basics.form.extension.text_filter_type:
         class: EHDev\BasicsBundle\Form\Extension\TextFilterTypeExtension
