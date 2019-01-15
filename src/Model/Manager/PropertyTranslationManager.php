@@ -27,7 +27,7 @@ class PropertyTranslationManager
         }
 
         $fieldTypeKey = 'oro.entity_extend.form.data_type.'.$fieldType;
-        if(($trans = $this->translator->trans($fieldTypeKey)) != $fieldTypeKey) {
+        if (($trans = $this->translator->trans($fieldTypeKey)) != $fieldTypeKey) {
             $propertyTranslation->setFieldType($trans);
         } else {
             $propertyTranslation->setFieldType($fieldType);

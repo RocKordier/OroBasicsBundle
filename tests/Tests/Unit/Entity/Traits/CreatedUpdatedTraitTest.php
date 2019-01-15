@@ -51,5 +51,6 @@ class CreatedUpdatedTraitTest extends TestCase
     {
         $updatedAt = new \DateTime();
         $this->testClass->setUpdatedAt($updatedAt);
-        $this->assertEquals($updatedAt, $this->testClass->getUpdatedAt());    }
+        $this->assertEquals($updatedAt, $this->testClass->getUpdatedAt());
+    }
 }

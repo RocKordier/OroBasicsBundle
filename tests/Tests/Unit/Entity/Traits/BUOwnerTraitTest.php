@@ -24,7 +24,7 @@ class BUOwnerTraitTest extends TestCase
     public function testSetOwner()
     {
         $bu = new BusinessUnit();
-        $this->assertEquals($this->testClass,  $this->testClass->setOwner($bu));
+        $this->assertEquals($this->testClass, $this->testClass->setOwner($bu));
     }
 
     /**

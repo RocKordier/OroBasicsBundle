@@ -21,8 +21,8 @@ class EntityPropertyTranslationProvider
     public function __construct(
         Registry $registry,
         ConfigVirtualFieldProvider $virtualFieldProvider,
-        PropertyTranslationManager $propertyTranslationManager)
-    {
+        PropertyTranslationManager $propertyTranslationManager
+    ) {
         $this->registry = $registry;
         $this->virtualFieldProvider = $virtualFieldProvider;
         $this->propertyTranslationManager = $propertyTranslationManager;
@@ -49,7 +49,7 @@ class EntityPropertyTranslationProvider
 
         $propertyNames = $this->getPropertyNames($classMetaData, $className);
 
-        foreach($propertyNames as $propertyName) {
+        foreach ($propertyNames as $propertyName) {
             $properties[] = $this->propertyTranslationManager->createPropertyTranslation(
                 $propertyName,
                 EntityLabelBuilder::getFieldLabelTranslationKey($className, $propertyName),

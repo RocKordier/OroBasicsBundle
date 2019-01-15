@@ -61,7 +61,7 @@ class PropertyTranslation
      */
     public function getTranslation(string $locale): string
     {
-        if(array_key_exists($locale, $this->catalogues)) {
+        if (array_key_exists($locale, $this->catalogues)) {
             return $this->catalogues[$locale]->get($this->translationKey);
         }
 
@@ -91,7 +91,7 @@ class PropertyTranslation
      */
     public function isTranslated(string $locale): bool
     {
-        if(array_key_exists($locale, $this->catalogues)) {
+        if (array_key_exists($locale, $this->catalogues)) {
             return $this->catalogues[$locale]->has($this->translationKey);
         }
 
@@ -108,8 +108,8 @@ class PropertyTranslation
 
     public function isPartialTranslatied(): bool
     {
-        foreach($this->catalogues as $locale => $_) {
-            if(!$this->isTranslated($locale)) {
+        foreach ($this->catalogues as $locale => $_) {
+            if (!$this->isTranslated($locale)) {
                 return false;
             }
         }

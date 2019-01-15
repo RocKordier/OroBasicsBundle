@@ -18,7 +18,7 @@ trait LifecycleTrait
 
         $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
 
-        if(!$this->createdAt) {
+        if (!$this->createdAt) {
             $this->createdAt = $dateTime;
         }
 
