@@ -9,6 +9,16 @@ services:
         tags:
             - { name: form.type, alias: ehdev_oro_mailbox_select }
 
+    ehdev_basics.form.type.oro_username_choice:
+        class: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType
+        tags:
+            - { name: form.type, alias: ehdev_oro_username_choice }
+
+    ehdev_basics.form.type.oro_organization_choice:
+        class: EHDev\BasicsBundle\Form\Type\OroOrganizationChoiceType
+        tags:
+            - { name: form.type, alias: ehdev_oro_organization_choice }
+
     ehdev_basics.form.extension.text_filter_type:
         class: EHDev\BasicsBundle\Form\Extension\TextFilterTypeExtension
         tags:

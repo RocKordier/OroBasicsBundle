@@ -27,7 +27,8 @@ system_configuration:
             priority: 30
         ehdev_basics.bg_username:
             data_type: string
-            type: text
+            type: ehdev_oro_username_choice
+            ui_only: true
             options:
                 label: ehdev.basics.system_configuration.groups.bg_username.title
                 resettable: false
@@ -35,7 +36,8 @@ system_configuration:
                 priority: 10
         ehdev_basics.bg_organization:
             data_type: string
-            type: text
+            type: ehdev_oro_organization_choice
+            ui_only: true
             options:
                 label: ehdev.basics.system_configuration.groups.bg_organization.title
                 resettable: false

@@ -51,6 +51,10 @@ class SecurityExtension extends AbstractExtension
             return;
         }
 
+        if (false === $this->configManager->get('ehdev_basics.bg_username')) {
+            return;
+        }
+
         $username = $this->configManager->get('ehdev_basics.bg_username');
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
 

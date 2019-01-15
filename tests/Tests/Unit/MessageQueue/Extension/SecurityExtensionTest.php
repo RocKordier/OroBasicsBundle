@@ -96,6 +96,22 @@ class SecurityExtensionTest extends TestCase
         $this->extension->onPreReceived($context->reveal());
     }
 
+    public function testOnPreRecievedWithNoUsername()
+    {
+        $this->tokenStorage->getToken()->willReturn(null);
+
+        $this->configManager
+            ->get('ehdev_basics.bg_username')
+            ->willReturn(false);
+
+        $this->configManager->get(Argument::any())
+            ->shouldNotBeCalled();
+
+        $context = $this->prophesize(Context::class);
+        $context->getLogger()->willReturn(new NullLogger());
+        $this->extension->onPreReceived($context->reveal());
+    }
+
     public function testOnPreRecievedWithAlready()
     {
         $token = $this->prophesize(TokenInterface::class);
