@@ -9,7 +9,6 @@ system_configuration:
             title: ehdev.basics.system_configuration.groups.google_maps_key.title
             priority: 50
             tooltip: ehdev.basics.system_configuration.groups.google_maps_key.tooltip
-
         ehdev_basics_message_queue:
             title: ehdev.basics.system_configuration.groups.message_queue.title
             priority: 60
