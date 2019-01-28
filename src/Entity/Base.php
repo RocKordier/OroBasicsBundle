@@ -4,6 +4,7 @@ namespace EHDev\BasicsBundle\Entity;
 use EHDev\BasicsBundle\Entity\Traits\LifecycleTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\HasLifecycleCallbacks()
