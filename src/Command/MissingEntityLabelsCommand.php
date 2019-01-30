@@ -151,6 +151,13 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             $availableLanguageCodes[] = $item->getLanguage()->getCode();
         }
 
+        $io->note(
+            sprintf(
+                'Available Languages: %s',
+                join(', ', $availableLanguageCodes)
+            )
+        );
+
         $notActiveLocales = array_filter($locales, function (string $locale) use ($availableLanguageCodes) {
             return !in_array($locale, $availableLanguageCodes, true);
         });
@@ -159,7 +166,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             $io->warning(
                 sprintf(
                     'Some locales are not activated in Oro yet so that can cause to some problems. %s',
-                    join(", ", $notActiveLocales)
+                    join(', ', $notActiveLocales)
                 )
             );
         }
