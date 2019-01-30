@@ -2,6 +2,7 @@ system_configuration:
     groups:
         ehdev_basics_settings:
             title: ehdev.basics.system_configuration.groups.settings.title
+            icon: fa-plug
         ehdev_basics_apikeys:
             icon: fa-google
             title: ehdev.basics.system_configuration.groups.apikeys.title
@@ -49,7 +50,7 @@ system_configuration:
                 children:
                     integrations:
                         children:
-                            ehdev_basics_apikeys:
+                            ehdev_basics_settings:
                                 children:
                                     ehdev_basics_googlemaps:
                                         children:
