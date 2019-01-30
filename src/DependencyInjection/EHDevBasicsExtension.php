@@ -1,6 +1,7 @@
 <?php
 namespace EHDev\BasicsBundle\DependencyInjection;
 
+use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -16,6 +17,10 @@ class EHDevBasicsExtension extends Extension
 
         $config = $this->processConfiguration(new Configuration(), $configs);
         $container->prependExtensionConfig($this->getAlias(), array_intersect_key($config, array_flip(['settings'])));
+
+        $container->addAliases([
+            UpdateHandlerFacade::class => 'oro_form.update_handler',
+        ]);
     }
 
     public function getAlias(): string
