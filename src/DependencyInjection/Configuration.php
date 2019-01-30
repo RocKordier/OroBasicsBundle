@@ -14,10 +14,14 @@ class Configuration implements ConfigurationInterface
         $rootNode    = $treeBuilder->root('ehdev_basics');
 
         SettingsBuilder::append($rootNode, [
-            'googlemaps_api_key'     => [
+            'googlemaps_api_key' => [
                 'value' => null,
                 'type'  => 'text',
             ],
+            'bg_username' => [
+                'value' => null,
+                'type' => 'text',
+            ]
         ]);
 
         return $treeBuilder;

@@ -58,7 +58,7 @@ class SecurityExtension extends AbstractExtension
         $username = $this->configManager->get('ehdev_basics.bg_username');
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
 
-        if (null === $user) {
+        if (null == $user) {
             throw new InvalidUserException(sprintf(
                 'The user "%s" does not exists! Check your configuration.',
                 $username
