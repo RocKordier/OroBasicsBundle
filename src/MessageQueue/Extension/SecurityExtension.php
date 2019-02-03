@@ -51,7 +51,7 @@ class SecurityExtension extends AbstractExtension
             return;
         }
 
-        if (false === $this->configManager->get('ehdev_basics.bg_username')) {
+        if (!$this->configManager->get('ehdev_basics.bg_username')) {
             return;
         }
 

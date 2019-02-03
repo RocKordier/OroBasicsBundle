@@ -102,7 +102,10 @@ class SecurityExtensionTest extends TestCase
 
         $this->configManager
             ->get('ehdev_basics.bg_username')
-            ->willReturn(false);
+            ->willReturn('');
+
+        $this->tokenStorage->setToken(Argument::type(ConsoleToken::class))
+            ->shouldNotBeCalled();
 
         $context = $this->prophesize(Context::class);
         $context->getLogger()->willReturn(new NullLogger());
