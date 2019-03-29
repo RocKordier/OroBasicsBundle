@@ -13,6 +13,7 @@ services:
 
     ehdev_basics.form.type.oro_username_choice:
         class: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType
+        arguments: ["@oro_entity.doctrine_helper"]
         tags:
             - { name: form.type, alias: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType }
 
