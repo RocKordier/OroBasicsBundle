@@ -21,6 +21,3 @@ services:
             - '@security.token_storage'
         tags:
             - { name: oro_message_queue.consumption.extension }
-
-    Oro\Bundle\ChartBundle\Model\ChartViewBuilder:
-        alias: oro_chart.view_builder

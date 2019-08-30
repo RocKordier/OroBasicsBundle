@@ -1,0 +1,9 @@
+services:
+    Oro\Bundle\ActivityBundle\Manager\ActivityManager:
+        alias: oro_activity.manager
+
+    Oro\Bundle\ChartBundle\Model\ChartViewBuilder:
+        alias: oro_chart.view_builder
+
+    Oro\Bundle\UserBundle\Mailer\UserTemplateEmailSender:
+        alias: oro_user.mailer.user_template_email_sender
