@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ehdev\OroBasicsBundle\Migrations;
+namespace EHDev\BasicsBundle\Migrations;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\AbstractQuery;
