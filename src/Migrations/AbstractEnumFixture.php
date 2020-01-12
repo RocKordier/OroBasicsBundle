@@ -27,9 +27,10 @@ abstract class AbstractEnumFixture extends AbstractFixture
         $priority = $this->getLastPriority($enumRepo);
 
         foreach ($this->getData() as $id => $name) {
-            if (0 === strlen($id)) {
-                $id = ExtendHelper::buildEnumValueId($name);
+            if (!is_string($id) || 0 === strlen($id)) {
+                $id = $name;
             }
+            $id = ExtendHelper::buildEnumValueId($id);
 
             $isDefault = $id === $this->getDefaultValue();
 
