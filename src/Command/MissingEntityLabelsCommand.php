@@ -2,14 +2,12 @@
 namespace EHDev\BasicsBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-
 use EHDev\BasicsBundle\Model\PropertyTranslation;
 use EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider;
-use Juanparati\Emoji\Emoji;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
-
 use Oro\Bundle\LocaleBundle\Entity\Localization;
 use Oro\Bundle\LocaleBundle\Entity\Repository\LocalizationRepository;
+use Spatie\Emoji\Emoji;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -116,7 +114,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
                     $translation->getFieldType(),
                 ];
                 foreach ($locales as $locale) {
-                    array_push($row, $translation->isTranslated($locale)? Emoji::char('white heavy check mark') : Emoji::char('cross mark'));
+                    array_push($row, $translation->isTranslated($locale) ? Emoji::checkMarkButton() : Emoji::crossMark());
                 }
                 array_push($row, $translation->getTranslationKey());
                 $tableHelper->addRow($row);
