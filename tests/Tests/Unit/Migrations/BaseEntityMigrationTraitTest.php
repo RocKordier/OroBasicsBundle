@@ -1,13 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Tests\Unit\Migrations;
 
+use Doctrine\DBAL\Schema\Table;
+use EHDev\BasicsBundle\Tests\Fixture\BaseEntityMigrationTraitTestClass;
 use EHDev\Utility\CIUtility\Tests\Utility\PHPUnitUtil;
 use PHPUnit\Framework\TestCase;
-use EHDev\BasicsBundle\Tests\Fixture\BaseEntityMigrationTraitTestClass;
-use Doctrine\DBAL\Schema\Table;
 
 /**
- * @coversDefaultClass EHDev\BasicsBundle\Migrations\BaseEntityMigrationTrait
+ * @coversDefaultClass \EHDev\BasicsBundle\Migrations\BaseEntityMigrationTrait
  */
 class BaseEntityMigrationTraitTest extends TestCase
 {

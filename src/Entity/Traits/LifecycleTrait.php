@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -8,7 +11,7 @@ trait LifecycleTrait
     use CreatedUpdatedTrait;
 
     /**
-     * Pre persist event listener
+     * Pre persist event listener.
      *
      * @ORM\PrePersist
      */
@@ -26,7 +29,7 @@ trait LifecycleTrait
     }
 
     /**
-     * Pre update event handler
+     * Pre update event handler.
      *
      * @ORM\PreUpdate
      */

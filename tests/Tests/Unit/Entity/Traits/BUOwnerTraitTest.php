@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Tests\Unit\Entity\Traits;
 
 use EHDev\BasicsBundle\Tests\Fixture\BUOwnerTraitTestClass;
@@ -7,7 +10,7 @@ use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass EHDev\BasicsBundle\Entity\Traits\BUOwnerTrait
+ * @coversDefaultClass \EHDev\BasicsBundle\Entity\Traits\BUOwnerTrait
  */
 class BUOwnerTraitTest extends TestCase
 {

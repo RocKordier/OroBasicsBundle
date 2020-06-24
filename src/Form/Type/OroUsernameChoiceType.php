@@ -19,8 +19,6 @@ class OroUsernameChoiceType extends AbstractType
 
     /**
      * OroUsernameChoiceType constructor.
-     *
-     * @param DoctrineHelper $helper
      */
     public function __construct(DoctrineHelper $helper)
     {
@@ -45,10 +43,8 @@ class OroUsernameChoiceType extends AbstractType
 
     /**
      * Fetches a list of usernames with ids.
-     *
-     * @return iterable
      */
-    private function getUsername() : iterable
+    private function getUsername(): iterable
     {
         $qb = $this->helper
             ->getEntityRepository(User::class)

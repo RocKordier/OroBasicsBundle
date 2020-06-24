@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;

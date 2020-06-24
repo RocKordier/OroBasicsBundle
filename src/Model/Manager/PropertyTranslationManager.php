@@ -1,10 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Model\Manager;
 
 use EHDev\BasicsBundle\Model\PropertyTranslation;
 use Symfony\Component\Translation\DataCollectorTranslator;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class PropertyTranslationManager
 {

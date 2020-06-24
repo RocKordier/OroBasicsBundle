@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -62,7 +65,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
                 'for specific entity'
             )
             ->setAliases([
-                'ehdev:missingEntityLabels'
+                'ehdev:missingEntityLabels',
             ])
         ;
     }
@@ -126,7 +129,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
             $io->newLine(2);
 
             if (count($missingTranslations) > 0) {
-                $entityCount++;
+                ++$entityCount;
             }
 
             $missingCount += count($missingTranslations);

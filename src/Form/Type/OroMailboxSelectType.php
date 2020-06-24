@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Form\Type;
 
 use Oro\Bundle\EmailBundle\Entity\Mailbox;

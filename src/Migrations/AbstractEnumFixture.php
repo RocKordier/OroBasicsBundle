@@ -47,10 +47,6 @@ abstract class AbstractEnumFixture extends AbstractFixture
 
     /**
      * Returns the last used priority.
-     *
-     * @param EnumValueRepository $repo
-     *
-     * @return int
      */
     private function getLastPriority(EnumValueRepository $repo): int
     {

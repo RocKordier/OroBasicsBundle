@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Provider;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
-
 use EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager;
 use Oro\Bundle\EntityBundle\Provider\ConfigVirtualFieldProvider;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;

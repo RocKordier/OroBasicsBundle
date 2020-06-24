@@ -1,10 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Entity;
 
-use EHDev\BasicsBundle\Entity\Traits\LifecycleTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
-use Gedmo\Mapping\Annotation as Gedmo;
+use EHDev\BasicsBundle\Entity\Traits\LifecycleTrait;
 
 /**
  * @ORM\HasLifecycleCallbacks()
@@ -15,7 +16,7 @@ class Base
     use LifecycleTrait;
 
     /**
-     * @var integer|null
+     * @var int|null
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

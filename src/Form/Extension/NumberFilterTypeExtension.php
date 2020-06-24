@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Form\Extension;
 
 use Oro\Bundle\FilterBundle\Form\Type\Filter\NumberFilterType;

@@ -11,11 +11,11 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\SecurityBundle\Authentication\Token\ConsoleToken;
 use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Component\MessageQueue\Consumption\Context;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\NullLogger;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Oro\Component\MessageQueue\Consumption\Context;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SecurityExtensionTest extends TestCase
@@ -44,7 +44,7 @@ class SecurityExtensionTest extends TestCase
     {
         $this->configManager = $this->prophesize(ConfigManager::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
-        $this->tokenStorage  = $this->prophesize(TokenStorageInterface::class);
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
 
         $this->extension = new SecurityExtension(
             $this->configManager->reveal(),
@@ -78,7 +78,7 @@ class SecurityExtensionTest extends TestCase
         $this->entityManager->getRepository(Organization::class)
             ->willReturn($repo->reveal());
 
-        $this->tokenStorage->setToken(Argument::that(function($token) use ($user, $organization) {
+        $this->tokenStorage->setToken(Argument::that(function ($token) use ($user, $organization) {
             if (!$token instanceof ConsoleToken) {
                 return false;
             }
@@ -135,7 +135,7 @@ class SecurityExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException EHDev\BasicsBundle\Exception\InvalidUserException
+     * @expectedException \EHDev\BasicsBundle\Exception\InvalidUserException
      */
     public function testOnPreReceivedWithInvalidUser()
     {

@@ -1,9 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Form\Extension;
 
+use Oro\Bundle\FilterBundle\Form\Type\Filter\TextFilterType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Oro\Bundle\FilterBundle\Form\Type\Filter\TextFilterType;
 
 class TextFilterTypeExtension extends AbstractTypeExtension
 {

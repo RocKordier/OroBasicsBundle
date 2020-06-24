@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -8,9 +11,9 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 trait CreatedUpdatedTrait
 {
     /**
-     * Time when created
+     * Time when created.
      *
-     * @var \DateTime $created
+     * @var \DateTime
      * @ORM\Column(type="datetime", name="created_at")
      * @Gedmo\Timestampable(on="create")
      * @ConfigField(
@@ -23,9 +26,9 @@ trait CreatedUpdatedTrait
      */
     protected $createdAt;
     /**
-     * Time when updated
+     * Time when updated.
      *
-     * @var \DateTime $updated
+     * @var \DateTime
      * @ORM\Column(type="datetime", name="updated_at")
      * @Gedmo\Timestampable(on="update")
      * @ConfigField(
@@ -39,7 +42,7 @@ trait CreatedUpdatedTrait
     protected $updatedAt;
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -53,7 +56,7 @@ trait CreatedUpdatedTrait
     }
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
@@ -63,7 +66,7 @@ trait CreatedUpdatedTrait
     }
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      *
@@ -77,7 +80,7 @@ trait CreatedUpdatedTrait
     }
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */

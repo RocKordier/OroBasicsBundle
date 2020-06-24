@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +21,7 @@ trait OrganizationOwnerTrait
     protected $organization;
 
     /**
-     * @param  Organization $organization
+     * @param Organization $organization
      *
      * @return self
      */

@@ -1,11 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EHDev\BasicsBundle\Tests\Unit\Entity\Traits;
 
 use EHDev\BasicsBundle\Tests\Fixture\CreatedUpdatedTraitTestClass;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass EHDev\BasicsBundle\Entity\Traits\CreatedUpdatedTrait
+ * @coversDefaultClass \EHDev\BasicsBundle\Entity\Traits\CreatedUpdatedTrait
  */
 class CreatedUpdatedTraitTest extends TestCase
 {

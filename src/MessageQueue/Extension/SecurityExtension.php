@@ -33,9 +33,6 @@ class SecurityExtension extends AbstractExtension
 
     /**
      * EnsureUserExtension constructor.
-     * @param ConfigManager $configManager
-     * @param EntityManagerInterface $entityManager
-     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(ConfigManager $configManager, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
     {
@@ -48,6 +45,7 @@ class SecurityExtension extends AbstractExtension
     {
         if (null !== $this->tokenStorage->getToken()) {
             $context->getLogger()->debug('A token is already set. Skip');
+
             return;
         }
 
@@ -59,10 +57,7 @@ class SecurityExtension extends AbstractExtension
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
 
         if (null == $user) {
-            throw new InvalidUserException(sprintf(
-                'The user "%s" does not exists! Check your configuration.',
-                $username
-            ));
+            throw new InvalidUserException(sprintf('The user "%s" does not exists! Check your configuration.', $username));
         }
 
         if ($name = $this->configManager->get('ehdev_basics.bg_organization')) {
@@ -79,7 +74,7 @@ class SecurityExtension extends AbstractExtension
 
         $context->getLogger()->info('Authenticated user with username {username} and organization {name}.', [
             'username' => $username,
-            'name'     => $organization->getName()
+            'name' => $organization->getName(),
         ]);
     }
 
