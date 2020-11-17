@@ -68,7 +68,7 @@ class SecurityExtension extends AbstractExtension
 
         $token = new ConsoleToken();
         $token->setUser($user);
-        $token->setOrganizationContext($organization);
+        $token->setOrganization($organization);
 
         $this->tokenStorage->setToken($token);
 
