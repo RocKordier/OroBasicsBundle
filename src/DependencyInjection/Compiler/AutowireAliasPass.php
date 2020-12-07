@@ -17,6 +17,8 @@ class AutowireAliasPass implements CompilerPassInterface
         'oro_attachment.manager' => 'Oro\Bundle\AttachmentBundle\Manager\AttachmentManager',
         'oro_attachment.provider.attachment' => 'Oro\Bundle\AttachmentBundle\Provider\AttachmentProvider',
         'oro_address.form.listener.address' => 'Oro\Bundle\AddressBundle\Form\EventListener\AddressCountryAndRegionSubscriber',
+        'oro_dataaudit.audit_config_provider' => 'Oro\Bundle\DataAuditBundle\Provider\AuditConfigProvider',
+        'oro_security.acl.manager' => 'Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager',
     ];
 
     public function process(ContainerBuilder $container)
