@@ -16,19 +16,18 @@ trait DatagridFilterTypeExtensionTrait
         return function (Options $options, $value) {
             $ehdevOpt = $options->offsetGet('ehdev_options');
 
+            $value = array_flip($value);
+
             if ($ehdevOpt && array_key_exists('filter_sort', $ehdevOpt) && is_array($ehdevOpt['filter_sort'])) {
                 $filterSort = $ehdevOpt['filter_sort'];
 
                 foreach (array_reverse($filterSort) as $filter) {
                     if (
-                        defined($this->getExtendedType().'::'.$filter) or
-                        defined(FilterUtility::class.'::'.$filter)
+                    defined($this->getExtendedType().'::'.$filter)
                     ) {
                         $arrayKey = null;
                         if (array_key_exists(constant($this->getExtendedType().'::'.$filter), $value)) {
                             $arrayKey = constant($this->getExtendedType().'::'.$filter);
-                        } elseif (array_key_exists(constant(FilterUtility::class.'::'.$filter), $value)) {
-                            $arrayKey = constant(FilterUtility::class.'::'.$filter);
                         } else {
                             throw new InvalidArgumentException('Filter not defined in form type');
                         }
@@ -42,7 +41,7 @@ trait DatagridFilterTypeExtensionTrait
                 }
             }
 
-            return $value;
+            return array_flip($value);
         };
     }
 
