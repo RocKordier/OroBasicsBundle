@@ -26,10 +26,10 @@
         }
     },
     "require": {
-        "php": ">=7.3",
-        "oro/platform": "^3.1 | ^4.1",
-        "gedmo/doctrine-extensions": "^2.4",
-        "stof/doctrine-extensions-bundle": "^1.2",
+        "php": "^7.4",
+        "oro/platform": "^4.2",
+        "gedmo/doctrine-extensions": "^2.4 || ^3.0.0",
+        "stof/doctrine-extensions-bundle": "^1.5",
         "spatie/emoji": "^2.1"
     },
     "require-dev": {
