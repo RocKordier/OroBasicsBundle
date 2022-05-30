@@ -74,7 +74,7 @@ class SecurityExtensionTest extends TestCase
             }
 
             self::assertSame($user, $token->getUser());
-            self::assertSame($organization, $token->getOrganizationContext());
+            self::assertSame($organization, $token->getOrganization());
 
             return true;
         }))->shouldBeCalled();
