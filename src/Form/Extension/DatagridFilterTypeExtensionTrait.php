@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace EHDev\BasicsBundle\Form\Extension;
 
 use Oro\Bundle\DataGridBundle\Exception\InvalidArgumentException;
-use Oro\Bundle\FilterBundle\Filter\FilterUtility;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

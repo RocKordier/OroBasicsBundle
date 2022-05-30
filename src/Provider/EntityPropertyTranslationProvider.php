@@ -14,7 +14,7 @@ use Oro\Bundle\UIBundle\Tools\EntityLabelBuilder;
 
 class EntityPropertyTranslationProvider
 {
-    const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
+    public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
 
     private $registry;
     private $virtualFieldProvider;

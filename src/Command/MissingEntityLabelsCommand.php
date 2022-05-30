@@ -20,13 +20,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class MissingEntityLabelsCommand extends ContainerAwareCommand
 {
-    const NAME = 'ehdev:missing-entity-labels';
-    const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
-    const OPTION_IGNORE_ORO = 'ignore-oro';
-    const OPTION_IGNORE_EXTEND = 'ignore-extend';
-    const OPTION_LOCALES = 'for-locale';
-    const OPTION_ENTITY = 'entity';
-    const OPTION_SHOW_ALL = 'all';
+    public const NAME = 'ehdev:missing-entity-labels';
+    public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
+    public const OPTION_IGNORE_ORO = 'ignore-oro';
+    public const OPTION_IGNORE_EXTEND = 'ignore-extend';
+    public const OPTION_LOCALES = 'for-locale';
+    public const OPTION_ENTITY = 'entity';
+    public const OPTION_SHOW_ALL = 'all';
 
     protected function configure()
     {
@@ -186,16 +186,14 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
     private function getEntityConfigModelRepository(): ObjectRepository
     {
-        return
-            $this->getContainer()
+        return $this->getContainer()
                 ->get('doctrine')->getManager('config')
                 ->getRepository(self::ENTITY_CLASS_NAME);
     }
 
     private function getLocalizationRepository(): LocalizationRepository
     {
-        return
-            $this->getContainer()
+        return $this->getContainer()
                 ->get('doctrine')->getRepository(Localization::class);
     }
 }
