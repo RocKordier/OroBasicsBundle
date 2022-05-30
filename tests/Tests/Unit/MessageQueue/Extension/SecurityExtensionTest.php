@@ -6,6 +6,7 @@ namespace EHDev\BasicsBundle\Tests\Unit\MessageQueue\Extension;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use EHDev\BasicsBundle\Exception\InvalidUserException;
 use EHDev\BasicsBundle\MessageQueue\Extension\SecurityExtension;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
@@ -14,33 +15,22 @@ use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Component\MessageQueue\Consumption\Context;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\NullLogger;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SecurityExtensionTest extends TestCase
 {
-    /**
-     * @var ConfigManager
-     */
-    private $configManager;
+    use ProphecyTrait;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ObjectProphecy|ConfigManager $configManager;
+    private ObjectProphecy|EntityManagerInterface $entityManager;
+    private ObjectProphecy|TokenStorageInterface$tokenStorage;
+    private ObjectProphecy|SecurityExtension $extension;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var SecurityExtension
-     */
-    private $extension;
-
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->configManager = $this->prophesize(ConfigManager::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
@@ -53,7 +43,7 @@ class SecurityExtensionTest extends TestCase
         );
     }
 
-    public function testOnPreReceived()
+    public function testOnPreReceived(): void
     {
         $this->configManager
             ->get('ehdev_basics.bg_username')
@@ -96,7 +86,7 @@ class SecurityExtensionTest extends TestCase
         $this->extension->onPreReceived($context->reveal());
     }
 
-    public function testOnPreRecievedWithNoUsername()
+    public function testOnPreRecievedWithNoUsername(): void
     {
         $this->tokenStorage->getToken()->willReturn(null);
 
@@ -112,7 +102,7 @@ class SecurityExtensionTest extends TestCase
         $this->extension->onPreReceived($context->reveal());
     }
 
-    public function testOnPreRecievedWithAlready()
+    public function testOnPreRecievedWithAlready(): void
     {
         $token = $this->prophesize(TokenInterface::class);
         $this->tokenStorage->getToken()->willReturn($token->reveal());
@@ -125,7 +115,7 @@ class SecurityExtensionTest extends TestCase
         $this->extension->onPreReceived($context->reveal());
     }
 
-    public function testOnPostReceived()
+    public function testOnPostReceived(): void
     {
         $this->tokenStorage->setToken(null)
             ->shouldBeCalled();
@@ -134,11 +124,10 @@ class SecurityExtensionTest extends TestCase
         $this->extension->onPostReceived($context->reveal());
     }
 
-    /**
-     * @expectedException \EHDev\BasicsBundle\Exception\InvalidUserException
-     */
-    public function testOnPreReceivedWithInvalidUser()
+    public function testOnPreReceivedWithInvalidUser(): void
     {
+        self::expectException(InvalidUserException::class);
+
         $repo = $this->prophesize(EntityRepository::class);
         $repo->findOneBy(['username' => 'foo'])->willReturn(null);
 

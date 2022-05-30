@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
  */
 class LifecycleTraitTest extends TestCase
 {
-    private $testClass;
+    private LifecycleTraitTestClass $testClass;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testClass = new LifecycleTraitTestClass();
     }
@@ -22,7 +22,7 @@ class LifecycleTraitTest extends TestCase
     /**
      * @covers ::prePersist
      */
-    public function testPrePersist()
+    public function testPrePersist(): void
     {
         $this->testClass->prePersist();
 
@@ -33,7 +33,7 @@ class LifecycleTraitTest extends TestCase
     /**
      * @covers ::preUpdate
      */
-    public function testPreUpdate()
+    public function testPreUpdate(): void
     {
         $this->testClass->preUpdate();
 

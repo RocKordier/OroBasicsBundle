@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
  */
 class BaseTest extends TestCase
 {
-    private $testClass;
+    private Base $testClass;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testClass = new Base();
     }
@@ -22,7 +22,7 @@ class BaseTest extends TestCase
     /**
      * @covers ::getId
      */
-    public function testGetIdAreNull()
+    public function testGetIdAreNull(): void
     {
         $this->assertNull($this->testClass->getId());
     }

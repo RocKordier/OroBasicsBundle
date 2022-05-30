@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
  */
 class CreatedUpdatedTraitTest extends TestCase
 {
-    private $testClass;
+    private CreatedUpdatedTraitTestClass $testClass;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testClass = new CreatedUpdatedTraitTestClass();
     }
@@ -22,7 +22,7 @@ class CreatedUpdatedTraitTest extends TestCase
     /**
      * @covers ::setCreatedAt
      */
-    public function testSetCreatedAt()
+    public function testSetCreatedAt(): void
     {
         $createdAt = new \DateTime();
         $this->assertEquals($this->testClass, $this->testClass->setCreatedAt($createdAt));
@@ -31,7 +31,7 @@ class CreatedUpdatedTraitTest extends TestCase
     /**
      * @covers ::getCreatedAt
      */
-    public function testGetCreatedAt()
+    public function testGetCreatedAt(): void
     {
         $createdAt = new \DateTime();
         $this->testClass->setCreatedAt($createdAt);
@@ -41,7 +41,7 @@ class CreatedUpdatedTraitTest extends TestCase
     /**
      * @covers ::setUpdatedAt
      */
-    public function testSetUpdatedAt()
+    public function testSetUpdatedAt(): void
     {
         $updatedAt = new \DateTime();
         $this->assertEquals($this->testClass, $this->testClass->setUpdatedAt($updatedAt));
@@ -50,7 +50,7 @@ class CreatedUpdatedTraitTest extends TestCase
     /**
      * @covers ::getUpdatedAt
      */
-    public function testGetUpdatedAt()
+    public function testGetUpdatedAt(): void
     {
         $updatedAt = new \DateTime();
         $this->testClass->setUpdatedAt($updatedAt);

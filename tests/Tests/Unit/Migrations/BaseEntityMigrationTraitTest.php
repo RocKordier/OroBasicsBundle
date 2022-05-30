@@ -6,7 +6,7 @@ namespace EHDev\BasicsBundle\Tests\Unit\Migrations;
 
 use Doctrine\DBAL\Schema\Table;
 use EHDev\BasicsBundle\Tests\Fixture\BaseEntityMigrationTraitTestClass;
-use EHDev\Utility\CIUtility\Tests\Utility\PHPUnitUtil;
+use EHDev\BasicsBundle\Tests\Util\PHPUnitUtil;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,13 +14,9 @@ use PHPUnit\Framework\TestCase;
  */
 class BaseEntityMigrationTraitTest extends TestCase
 {
-    public function testMigrationTrait()
+    public function testMigrationTrait(): void
     {
-        try {
-            $table = new Table('TestTable');
-        } catch (\Exception $e) {
-            $this->markAsRisky();
-        }
+        $table = new Table('TestTable');
         $migrateBaseEntityMethod = PHPUnitUtil::callMethod(new BaseEntityMigrationTraitTestClass(), 'migrateBaseEntity', [$table]);
 
         $this->assertNull($migrateBaseEntityMethod);

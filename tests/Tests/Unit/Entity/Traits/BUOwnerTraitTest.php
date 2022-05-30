@@ -14,9 +14,9 @@ use PHPUnit\Framework\TestCase;
  */
 class BUOwnerTraitTest extends TestCase
 {
-    private $testClass;
+    private BUOwnerTraitTestClass $testClass;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testClass = new BUOwnerTraitTestClass();
     }
@@ -24,7 +24,7 @@ class BUOwnerTraitTest extends TestCase
     /**
      * @covers ::setOwner
      */
-    public function testSetOwner()
+    public function testSetOwner(): void
     {
         $bu = new BusinessUnit();
         $this->assertEquals($this->testClass, $this->testClass->setOwner($bu));
@@ -33,7 +33,7 @@ class BUOwnerTraitTest extends TestCase
     /**
      * @covers ::getOwner
      */
-    public function testGetOwner()
+    public function testGetOwner(): void
     {
         $bu = new BusinessUnit();
         $this->testClass->setOwner($bu);
@@ -43,7 +43,7 @@ class BUOwnerTraitTest extends TestCase
     /**
      * @covers ::setOrganization
      */
-    public function testSetOrganization()
+    public function testSetOrganization(): void
     {
         $org = new Organization();
         $this->assertEquals($this->testClass, $this->testClass->setOrganization($org));
@@ -52,7 +52,7 @@ class BUOwnerTraitTest extends TestCase
     /**
      * @covers ::getOrganization
      */
-    public function testGetOrganization()
+    public function testGetOrganization(): void
     {
         $org = new Organization();
         $this->testClass->setOrganization($org);
