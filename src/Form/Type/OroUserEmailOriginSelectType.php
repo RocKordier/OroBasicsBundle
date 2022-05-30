@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OroUserEmailOriginSelectType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [
@@ -20,17 +20,17 @@ class OroUserEmailOriginSelectType extends AbstractType
         );
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->getBlockPrefix();
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ehdev_oro_user_email_origin_select';
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return EntityType::class;
     }

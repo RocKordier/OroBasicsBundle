@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Migrations;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\Persistence\ObjectManager;
+use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
 use Oro\Bundle\EntityExtendBundle\Entity\Repository\EnumValueRepository;
 use Oro\Bundle\EntityExtendBundle\Migration\Fixture\AbstractEnumFixture as AbstractFixture;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
@@ -16,11 +17,9 @@ use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
  */
 abstract class AbstractEnumFixture extends AbstractFixture
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
+        /** @var class-string $className */
         $className = ExtendHelper::buildEnumValueClassName($this->getEnumCode());
         /** @var EnumValueRepository $enumRepo */
         $enumRepo = $manager->getRepository($className);
@@ -34,7 +33,9 @@ abstract class AbstractEnumFixture extends AbstractFixture
 
             $isDefault = $id === $this->getDefaultValue();
 
-            if (!$enumOption = $enumRepo->find($id)) {
+            /** @var AbstractEnumValue|false $enumOption */
+            $enumOption = $enumRepo->find($id);
+            if (!$enumOption) {
                 $enumOption = $enumRepo->createEnumValue($name, $priority++, $isDefault, $id);
                 $manager->persist($enumOption);
             } elseif ($enumOption->getName() !== $name || $enumOption->isDefault() !== $isDefault) {
@@ -50,10 +51,10 @@ abstract class AbstractEnumFixture extends AbstractFixture
      */
     private function getLastPriority(EnumValueRepository $repo): int
     {
-        return (int) $repo->createQueryBuilder('e')
+        return intval($repo->createQueryBuilder('e')
             ->select('MAX(e.priority)')
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR));
     }
 }

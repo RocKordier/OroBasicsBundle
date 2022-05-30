@@ -9,7 +9,7 @@ use Doctrine\DBAL\Schema\Table;
 
 trait OrganizationOwnerMigrationTrait
 {
-    private static function migrateOrganizationOwner(Table $table, Schema $schema)
+    private static function migrateOrganizationOwner(Table $table, Schema $schema): void
     {
         $table->addColumn('organization_id', 'integer', ['notnull' => false]);
         $table->addIndex(['organization_id']);

@@ -14,29 +14,18 @@ trait UserOwnerTrait
 {
     use OrganizationOwnerTrait;
 
-    /**
-     * @var User
-     * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_owner_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $owner;
+    #[ORM\ManyToOne('Oro\Bundle\UserBundle\Entity\User')]
+    #[ORM\JoinColumn('user_owner_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    protected ?User $owner;
 
-    /**
-     * @param User $owner
-     *
-     * @return self
-     */
-    public function setOwner(User $owner = null)
+    public function setOwner(User $owner = null): self
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
-    public function getOwner()
+    public function getOwner(): ?User
     {
         return $this->owner;
     }

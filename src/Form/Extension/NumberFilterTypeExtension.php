@@ -12,14 +12,14 @@ class NumberFilterTypeExtension extends AbstractTypeExtension
 {
     use DatagridFilterTypeExtensionTrait;
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $this->setEhdevOptions($resolver);
         $resolver->setNormalizer('operator_choices', $this->getNormalizer());
     }
 
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return NumberFilterType::class;
+        return [NumberFilterType::class];
     }
 }

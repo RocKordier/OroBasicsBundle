@@ -5,33 +5,28 @@ declare(strict_types=1);
 namespace EHDev\BasicsBundle\Provider;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager;
 use Oro\Bundle\EntityBundle\Provider\ConfigVirtualFieldProvider;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
+use Oro\Bundle\EntityConfigBundle\Entity\FieldConfigModel;
 use Oro\Bundle\UIBundle\Tools\EntityLabelBuilder;
 
 class EntityPropertyTranslationProvider
 {
     public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
 
-    private $registry;
-    private $virtualFieldProvider;
-    private $propertyTranslationManager;
-
     public function __construct(
-        Registry $registry,
-        ConfigVirtualFieldProvider $virtualFieldProvider,
-        PropertyTranslationManager $propertyTranslationManager
-    ) {
-        $this->registry = $registry;
-        $this->virtualFieldProvider = $virtualFieldProvider;
-        $this->propertyTranslationManager = $propertyTranslationManager;
-    }
+        private readonly Registry $registry,
+        private readonly ConfigVirtualFieldProvider $virtualFieldProvider,
+        private readonly PropertyTranslationManager $propertyTranslationManager
+    ) {}
 
     public function getTranslations(EntityConfigModel $configModel, array $locales): array
     {
+        /** @var class-string $className */
         $className = $configModel->getClassName();
         $classMetaData = $this->getClassMetaData($className);
 
@@ -63,7 +58,7 @@ class EntityPropertyTranslationProvider
         return $properties;
     }
 
-    private function getPropertyNames(ClassMetadata $classMetaData, $className): array
+    private function getPropertyNames(ClassMetadata $classMetaData, string $className): array
     {
         $fieldNames = $classMetaData->getFieldNames();
         $associationNames = $classMetaData->getAssociationNames();
@@ -72,9 +67,15 @@ class EntityPropertyTranslationProvider
         return $fieldNames + $associationNames + $virtualFields;
     }
 
+    /**
+     * @param class-string $class
+     */
     private function getClassMetaData(string $class): ClassMetaData
     {
-        return $this->registry->getEntityManager()->getClassMetadata($class);
+        /** @var ObjectManager $manager */
+        $manager = $this->registry->getManagerForClass($class);
+
+        return $manager->getClassMetadata($class);
     }
 
     private function getEntityConfigModelRepository(): ObjectRepository
@@ -88,7 +89,9 @@ class EntityPropertyTranslationProvider
         /** @var EntityConfigModel $entity */
         $entity = $this->getEntityConfigModelRepository()->findOneBy(['className' => $className]);
 
-        if ($field = $entity->getField($propertyName)) {
+        /** @var FieldConfigModel|false $field */
+        $field = $entity->getField($propertyName);
+        if ($field) {
             return $field->getType();
         }
 

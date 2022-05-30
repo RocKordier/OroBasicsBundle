@@ -10,30 +10,18 @@ trait LifecycleTrait
 {
     use CreatedUpdatedTrait;
 
-    /**
-     * Pre persist event listener.
-     *
-     * @ORM\PrePersist
-     */
-    public function prePersist()
+    #[ORM\PrePersist]
+    public function prePersist(): void
     {
         @trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', E_USER_DEPRECATED);
 
         $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
-
-        if (!$this->createdAt) {
-            $this->createdAt = $dateTime;
-        }
-
+        $this->createdAt = $dateTime;
         $this->updatedAt = $dateTime;
     }
 
-    /**
-     * Pre update event handler.
-     *
-     * @ORM\PreUpdate
-     */
-    public function preUpdate()
+    #[ORM\PreUpdate]
+    public function preUpdate(): void
     {
         @trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', E_USER_DEPRECATED);
 

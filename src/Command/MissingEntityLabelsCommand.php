@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Persistence\ObjectRepository;
 use EHDev\BasicsBundle\Model\PropertyTranslation;
 use EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
 use Oro\Bundle\LocaleBundle\Entity\Localization;
 use Oro\Bundle\LocaleBundle\Entity\Repository\LocalizationRepository;
 use Spatie\Emoji\Emoji;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MissingEntityLabelsCommand extends ContainerAwareCommand
+class MissingEntityLabelsCommand extends Command
 {
     public const NAME = 'ehdev:missing-entity-labels';
     public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
@@ -28,10 +29,17 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
     public const OPTION_ENTITY = 'entity';
     public const OPTION_SHOW_ALL = 'all';
 
-    protected function configure()
+    public function __construct(
+        private readonly EntityPropertyTranslationProvider $entityPropertyTranslationProvider,
+        private readonly Registry $registry,
+        private readonly LocalizationRepository $localizationRepository
+    ) {
+        parent::__construct(self::NAME);
+    }
+
+    protected function configure(): void
     {
         $this
-            ->setName(self::NAME)
             ->setDescription('Shows all Labels which are missing for entities')
             ->addOption(
                 self::OPTION_IGNORE_ORO,
@@ -75,6 +83,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         $io->title('Untranslated Strings');
         $all = $input->getOption(self::OPTION_SHOW_ALL);
+        /** @var array $locales */
         $locales = $input->getOption(self::OPTION_LOCALES);
 
         $this->checkForActiveLanguages($locales, $io);
@@ -97,7 +106,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
                 continue;
             }
 
-            $translations = $this->getEntityPropertyTranslationProvider()->getTranslations($item, $locales);
+            $translations = $this->entityPropertyTranslationProvider->getTranslations($item, $locales);
             $translations = array_filter($translations, function (PropertyTranslation $translation) use ($all) {
                 return $all || !$translation->isPartialTranslatied();
             });
@@ -106,7 +115,6 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
                 return !$translation->isPartialTranslatied();
             });
 
-            /** @var Table $tableHelper */
             $tableHelper = new Table($output);
             $tableHelper->setHeaders(array_merge(['Property', 'Data Type'], $locales, ['transKey']));
 
@@ -148,7 +156,7 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
     {
         $availableLanguageCodes = [];
         /** @var Localization $item */
-        foreach ($this->getLocalizationRepository()->findAll() as $item) {
+        foreach ($this->localizationRepository->findAll() as $item) {
             $availableLanguageCodes[] = $item->getLanguage()->getCode();
         }
 
@@ -173,11 +181,6 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
         }
     }
 
-    private function getEntityPropertyTranslationProvider(): EntityPropertyTranslationProvider
-    {
-        return $this->getContainer()->get('ehdev.orobasics.provider.entity_property_translation_provider');
-    }
-
     private function getAllConfiguredEntities(): array
     {
         return $this->getEntityConfigModelRepository()
@@ -186,14 +189,8 @@ class MissingEntityLabelsCommand extends ContainerAwareCommand
 
     private function getEntityConfigModelRepository(): ObjectRepository
     {
-        return $this->getContainer()
-                ->get('doctrine')->getManager('config')
-                ->getRepository(self::ENTITY_CLASS_NAME);
-    }
-
-    private function getLocalizationRepository(): LocalizationRepository
-    {
-        return $this->getContainer()
-                ->get('doctrine')->getRepository(Localization::class);
+        return $this->registry
+                    ->getManager('config')
+                    ->getRepository(self::ENTITY_CLASS_NAME);
     }
 }

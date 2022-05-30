@@ -11,11 +11,6 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 trait CreatedUpdatedTrait
 {
     /**
-     * Time when created.
-     *
-     * @var \DateTime
-     * @ORM\Column(type="datetime", name="created_at")
-     * @Gedmo\Timestampable(on="create")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={
@@ -24,13 +19,11 @@ trait CreatedUpdatedTrait
      *      }
      * )
      */
-    protected $createdAt;
+    #[ORM\Column('created_at', type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
+    protected \DateTime $createdAt;
+
     /**
-     * Time when updated.
-     *
-     * @var \DateTime
-     * @ORM\Column(type="datetime", name="updated_at")
-     * @Gedmo\Timestampable(on="update")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={
@@ -39,52 +32,30 @@ trait CreatedUpdatedTrait
      *      }
      * )
      */
-    protected $updatedAt;
+    #[ORM\Column('updated_at', type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'update')]
+    protected \DateTime $updatedAt;
 
-    /**
-     * Set createdAt.
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return self
-     */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * Get createdAt.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     * Set updatedAt.
-     *
-     * @param \DateTime $updatedAt
-     *
-     * @return self
-     */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    /**
-     * Get updatedAt.
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }

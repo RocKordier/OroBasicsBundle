@@ -4,22 +4,30 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\SecurityBundle\Acl\Exception\InvalidAclMaskException;
+use Oro\Bundle\SecurityBundle\Acl\Extension\AclExtensionInterface;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
 use Oro\Bundle\UserBundle\Entity\Role;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
-class InitRoleAclCommand extends ContainerAwareCommand
+class InitRoleAclCommand extends Command
 {
     private const NAME = 'ehdev:init-role-acl';
 
-    protected function configure()
+    public function __construct(
+        private readonly AclManager $aclManager,
+        private ObjectManager $objectManager
+    ) {
+        parent::__construct(self::NAME);
+    }
+
+    protected function configure(): void
     {
         $this
             ->setName(self::NAME)
@@ -30,9 +38,6 @@ class InitRoleAclCommand extends ContainerAwareCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $configLoader = new CumulativeConfigLoader(
@@ -46,9 +51,8 @@ class InitRoleAclCommand extends ContainerAwareCommand
         return 0;
     }
 
-    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader)
+    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader): void
     {
-        $manager = $this->getManager();
         $persistRoles = [];
 
         foreach ($configLoader->load() as $resource) {
@@ -76,17 +80,15 @@ class InitRoleAclCommand extends ContainerAwareCommand
         }
 
         foreach ($persistRoles as $role) {
-            $manager->persist($role);
+            $this->objectManager->persist($role);
         }
 
-        $manager->flush();
+        $this->objectManager->flush();
     }
 
-    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader)
+    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
     {
-        $aclManager = $this->getAclManager();
-
-        if (!$aclManager->isAclEnabled()) {
+        if (!$this->aclManager->isAclEnabled()) {
             $output->writeln('<error>ACL not enabled. No ACL loaded!</error>');
 
             return;
@@ -96,10 +98,10 @@ class InitRoleAclCommand extends ContainerAwareCommand
             foreach ($resource->data as $roleName => $roleConfigData) {
                 if (($role = $this->getRole($roleName)) && array_key_exists('permissions', $roleConfigData)) {
                     $output->writeln('INIT role: '.$roleName);
-                    $sid = $aclManager->getSid($role);
+                    $sid = $this->aclManager->getSid($role);
                     foreach ($roleConfigData['permissions'] as $permission => $acls) {
                         try {
-                            $this->processPermission($aclManager, $sid, $permission, $acls);
+                            $this->processPermission($sid, $permission, $acls);
                         } catch (InvalidAclMaskException $e) {
                             $output->writeln('<error>\n\n'.$e->getMessage().'\n</error>');
                         }
@@ -109,27 +111,25 @@ class InitRoleAclCommand extends ContainerAwareCommand
                         '<comment>Role '.$roleName.' doesn\'t exist or role has no permissions. Skipped!</comment>'
                     );
                 }
-                $aclManager->flush();
+                $this->aclManager->flush();
             }
         }
 
         $output->writeln('Completed');
     }
 
-    /**
-     * @param $permission
-     */
     protected function processPermission(
-        AclManager $aclManager,
         SecurityIdentityInterface $sid,
-        $permission,
+        string $permission,
         array $acls
-    ) {
-        $oId = $aclManager->getOid(str_replace('|', ':', $permission));
+    ): void {
+        $oId = $this->aclManager->getOid(str_replace('|', ':', $permission));
+        $extension = $this->aclManager->getExtensionSelector()->select($oId);
+        if (!$extension instanceof AclExtensionInterface) {
+            return;
+        }
 
-        $extension = $aclManager->getExtensionSelector()->select($oId);
         $maskBuilders = $extension->getAllMaskBuilders();
-
         foreach ($maskBuilders as $maskBuilder) {
             $mask = $maskBuilder->reset()->get();
             if (!empty($acls)) {
@@ -140,25 +140,12 @@ class InitRoleAclCommand extends ContainerAwareCommand
                 }
             }
 
-            $aclManager->setPermission($sid, $oId, $mask);
+            $this->aclManager->setPermission($sid, $oId, $mask);
         }
     }
 
-    /**
-     * @return Role|null
-     */
-    protected function getRole(string $roleName)
+    protected function getRole(string $roleName): ?Role
     {
-        return $this->getManager()->getRepository('OroUserBundle:Role')->findOneBy(['role' => $roleName]);
-    }
-
-    protected function getManager(): ObjectManager
-    {
-        return $this->getContainer()->get('doctrine')->getManager();
-    }
-
-    protected function getAclManager(): AclManager
-    {
-        return $this->getContainer()->get('oro_security.acl.manager');
+        return $this->objectManager->getRepository(Role::class)->findOneBy(['role' => $roleName]);
     }
 }

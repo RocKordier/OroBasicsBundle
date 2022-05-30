@@ -21,7 +21,7 @@ class AutowireAliasPass implements CompilerPassInterface
         'oro_security.acl.manager' => 'Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager',
     ];
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         foreach (self::ALIAS_MAP as $id => $alias) {
             if ($container->has($id) && !$container->hasAlias($alias)) {

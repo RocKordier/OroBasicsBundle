@@ -4,3 +4,6 @@ parameters:
         - %currentWorkingDirectory%/src
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+
+    ignoreErrors:
+            - '#Call to an undefined method Oro\\Bundle\\UserBundle\\Entity\\Role::setExtendDescription\(\)#'

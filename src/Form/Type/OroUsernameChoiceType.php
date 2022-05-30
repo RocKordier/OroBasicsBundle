@@ -12,38 +12,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OroUsernameChoiceType extends AbstractType
 {
-    /**
-     * @var DoctrineHelper
-     */
-    private $helper;
+    public function __construct(
+        private readonly DoctrineHelper $helper
+    ) {}
 
-    /**
-     * OroUsernameChoiceType constructor.
-     */
-    public function __construct(DoctrineHelper $helper)
-    {
-        $this->helper = $helper;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('choices', $this->getUsername());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }
 
-    /**
-     * Fetches a list of usernames with ids.
-     */
     private function getUsername(): iterable
     {
         $qb = $this->helper
@@ -53,6 +35,7 @@ class OroUsernameChoiceType extends AbstractType
         $qb->select('u.username');
         $qb->orderBy('u.username');
 
+        /** @var array $row */
         foreach ($qb->getQuery()->getArrayResult() as $row) {
             yield $row['username'] => $row['username'];
         }

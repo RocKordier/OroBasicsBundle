@@ -9,12 +9,9 @@ use Symfony\Component\Translation\DataCollectorTranslator;
 
 class PropertyTranslationManager
 {
-    private $translator;
-
-    public function __construct(DataCollectorTranslator $translator)
-    {
-        $this->translator = $translator;
-    }
+    public function __construct(
+        private readonly DataCollectorTranslator $translator
+    ) {}
 
     public function createPropertyTranslation(string $propertyName, string $translationKey, string $fieldType, array $locales): PropertyTranslation
     {
@@ -23,7 +20,6 @@ class PropertyTranslationManager
         $propertyTranslation->setTranslationKey($translationKey);
 
         foreach ($locales as $locale) {
-            $this->translator->setFallbackLocales([]);
             $propertyTranslation->addCatalogue($this->translator->getCatalogue($locale), $locale);
         }
 

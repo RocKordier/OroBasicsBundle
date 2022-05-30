@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Table;
 
 trait BaseEntityMigrationTrait
 {
-    private static function migrateBaseEntity(Table $table)
+    private static function migrateBaseEntity(Table $table): void
     {
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('created_at', 'datetime', ['comment' => '(DC2Type:datetime)']);

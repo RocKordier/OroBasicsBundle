@@ -11,7 +11,7 @@ trait UserOwnerMigrationTrait
 {
     use OrganizationOwnerMigrationTrait;
 
-    private static function migrationBUOwner(Table $table, Schema $schema)
+    private static function migrationBUOwner(Table $table, Schema $schema): void
     {
         $table->addColumn('user_owner_id', 'integer', ['notnull' => false]);
         $table->addIndex(['user_owner_id']);

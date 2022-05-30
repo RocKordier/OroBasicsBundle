@@ -8,20 +8,14 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class PropertyTranslation
 {
-    /** @var string */
-    private $propertyName;
+    private string $propertyName;
 
-    /** @var string */
-    private $translationKey;
+    private string $translationKey;
 
-    /** @var string */
-    private $translation;
-
-    /** @var string */
-    private $fieldType;
+    private string $fieldType;
 
     /** @var MessageCatalogueInterface[] */
-    private $catalogues;
+    private array $catalogues;
 
     public function getPropertyName(): string
     {
@@ -77,7 +71,7 @@ class PropertyTranslation
         return false;
     }
 
-    public function addCatalogue(MessageCatalogueInterface $catalogue, string $locale)
+    public function addCatalogue(MessageCatalogueInterface $catalogue, string $locale): void
     {
         $this->catalogues[$locale] = $catalogue;
     }

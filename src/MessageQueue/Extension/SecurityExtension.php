@@ -16,32 +16,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SecurityExtension extends AbstractExtension
 {
-    /**
-     * @var ConfigManager
-     */
-    private $configManager;
+    public function __construct(
+        private readonly ConfigManager $configManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TokenStorageInterface $tokenStorage
+    ) {}
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * EnsureUserExtension constructor.
-     */
-    public function __construct(ConfigManager $configManager, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
-    {
-        $this->configManager = $configManager;
-        $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
-    }
-
-    public function onPreReceived(Context $context)
+    public function onPreReceived(Context $context): void
     {
         if (null !== $this->tokenStorage->getToken()) {
             $context->getLogger()->debug('A token is already set. Skip');
@@ -53,6 +34,7 @@ class SecurityExtension extends AbstractExtension
             return;
         }
 
+        /** @var string $username */
         $username = $this->configManager->get('ehdev_basics.bg_username');
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
 
@@ -61,8 +43,10 @@ class SecurityExtension extends AbstractExtension
         }
 
         if ($name = $this->configManager->get('ehdev_basics.bg_organization')) {
+            /** @var Organization $organization */
             $organization = $this->entityManager->getRepository(Organization::class)->findOneBy(['name' => $name]);
         } else {
+            /** @var Organization $organization */
             $organization = $user->getOrganizations()->first();
         }
 
@@ -78,7 +62,7 @@ class SecurityExtension extends AbstractExtension
         ]);
     }
 
-    public function onPostReceived(Context $context)
+    public function onPostReceived(Context $context): void
     {
         $this->tokenStorage->setToken(null);
     }
