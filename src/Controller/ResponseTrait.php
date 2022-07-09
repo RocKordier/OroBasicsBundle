@@ -21,7 +21,7 @@ trait ResponseTrait
         }
 
         return new Response(
-            $this->twig->render($twigTemplate, array_merge($response, ['festival' => $festival])),
+            $this->twig->render($twigTemplate, array_merge($handleResponse, $additionalParameter)),
             $statusCode,
             $headers
         );
