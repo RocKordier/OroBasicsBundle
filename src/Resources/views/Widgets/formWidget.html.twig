@@ -3,7 +3,7 @@
 <div class="widget-content">
     {% if savedId is defined and savedId %}
         <script type="text/javascript">
-            require(['underscore', 'orotranslation/js/translator', 'oroui/js/widget-manager',
+            loadModules(['underscore', 'orotranslation/js/translator', 'oroui/js/widget-manager',
                     'oroui/js/messenger', 'oroui/js/mediator'],
                 function(_, __, widgetManager, messenger, mediator) {
                     widgetManager.getWidgetInstance({{ app.request.get('_wid')|json_encode|raw }}, function(widget) {
@@ -18,7 +18,7 @@
         </script>
     {% else %}
         <script type="text/javascript">
-            require(['underscore', 'orotranslation/js/translator', 'oroui/js/widget-manager',
+            loadModules(['underscore', 'orotranslation/js/translator', 'oroui/js/widget-manager',
                     'oroui/js/messenger', 'oroui/js/mediator'],
                 function(_, __, widgetManager, messenger, mediator) {
                     {% block requireActionUnsaved %} {% endblock %}

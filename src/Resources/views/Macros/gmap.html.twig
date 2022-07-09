@@ -5,7 +5,7 @@
     <div class="map-box" id="address-map-{{ id }}"></div>
 
     <script type="text/javascript">
-        require(['jquery', 'oroaddress/js/mapservice/googlemaps', 'oroui/js/widget-manager'],
+        loadModules(['jquery', 'oroaddress/js/mapservice/googlemaps', 'oroui/js/widget-manager'],
             function($, Googlemaps) {
                 var mapContainerFrame = $('#address-map-{{ id }}');
                 var mapView = new Googlemaps({
