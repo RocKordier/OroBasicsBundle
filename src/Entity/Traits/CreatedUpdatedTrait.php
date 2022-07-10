@@ -11,6 +11,8 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 trait CreatedUpdatedTrait
 {
     /**
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={
@@ -24,6 +26,8 @@ trait CreatedUpdatedTrait
     protected \DateTime $createdAt;
 
     /**
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="update")
      * @ConfigField(
      *      defaultValues={
      *          "entity"={
