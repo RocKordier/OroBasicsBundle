@@ -1,4 +1,10 @@
 services:
+    EHDev\BasicsBundle\Command\MissingEntityLabelsCommand:
+        arguments:
+            - '@ehdev.orobasics.provider.entity_property_translation_provider'
+            - '@doctrine'
+        tags:
+            - { name: console.command, command: ehdev:missing-entity-labels }
 
     ehdev.orobasics.property_translation.manager:
         class: EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager

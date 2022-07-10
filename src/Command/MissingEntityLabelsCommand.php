@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Command;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use EHDev\BasicsBundle\Model\PropertyTranslation;
 use EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider;
@@ -31,8 +32,7 @@ class MissingEntityLabelsCommand extends Command
 
     public function __construct(
         private readonly EntityPropertyTranslationProvider $entityPropertyTranslationProvider,
-        private readonly Registry $registry,
-        private readonly LocalizationRepository $localizationRepository
+        private readonly ManagerRegistry $registry,
     ) {
         parent::__construct(self::NAME);
     }
@@ -155,8 +155,12 @@ class MissingEntityLabelsCommand extends Command
     private function checkForActiveLanguages(array $locales, SymfonyStyle $io): void
     {
         $availableLanguageCodes = [];
+        /** @var ObjectManager $manager */
+        $manager = $this->registry->getManagerForClass(Localization::class);
+        /** @var LocalizationRepository $repository */
+        $repository = $manager->getRepository(Localization::class);
         /** @var Localization $item */
-        foreach ($this->localizationRepository->findAll() as $item) {
+        foreach ($repository->findAll() as $item) {
             $availableLanguageCodes[] = $item->getLanguage()->getCode();
         }
 

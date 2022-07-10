@@ -9,7 +9,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager;
-use Oro\Bundle\EntityBundle\Provider\ConfigVirtualFieldProvider;
+use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
 use Oro\Bundle\EntityConfigBundle\Entity\FieldConfigModel;
 use Oro\Bundle\UIBundle\Tools\EntityLabelBuilder;
@@ -20,7 +20,7 @@ class EntityPropertyTranslationProvider
 
     public function __construct(
         private readonly Registry $registry,
-        private readonly ConfigVirtualFieldProvider $virtualFieldProvider,
+        private readonly VirtualFieldProviderInterface $virtualFieldProvider,
         private readonly PropertyTranslationManager $propertyTranslationManager
     ) {}
 
