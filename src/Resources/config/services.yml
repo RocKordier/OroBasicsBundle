@@ -1,4 +1,11 @@
 services:
+    EHDev\BasicsBundle\Command\InitRoleAclCommand:
+        arguments:
+            - '@oro_security.acl.manager'
+            - '@doctrine'
+        tags:
+            - { name: console.command, command: ehdev:init-role-acl }
+
     EHDev\BasicsBundle\Command\MissingEntityLabelsCommand:
         arguments:
             - '@ehdev.orobasics.provider.entity_property_translation_provider'

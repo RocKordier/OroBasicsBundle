@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Command;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Oro\Bundle\SecurityBundle\Acl\Exception\InvalidAclMaskException;
 use Oro\Bundle\SecurityBundle\Acl\Extension\AclExtensionInterface;
@@ -22,7 +23,7 @@ class InitRoleAclCommand extends Command
 
     public function __construct(
         private readonly AclManager $aclManager,
-        private ObjectManager $objectManager
+        private ManagerRegistry $objectManager
     ) {
         parent::__construct(self::NAME);
     }
@@ -80,10 +81,10 @@ class InitRoleAclCommand extends Command
         }
 
         foreach ($persistRoles as $role) {
-            $this->objectManager->persist($role);
+            $this->objectManager->getManagerForClass(Role::class)->persist($role);
         }
 
-        $this->objectManager->flush();
+        $this->objectManager->getManagerForClass(Role::class)->flush();
     }
 
     protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
