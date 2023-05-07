@@ -13,6 +13,7 @@ use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
 use Oro\Bundle\LocaleBundle\Entity\Localization;
 use Oro\Bundle\LocaleBundle\Entity\Repository\LocalizationRepository;
 use Spatie\Emoji\Emoji;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,9 +21,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand('ehdev:missing-entity-labels', 'Shows all Labels which are missing for entities', ['ehdev:missingEntityLabels'])]
 class MissingEntityLabelsCommand extends Command
 {
-    public const NAME = 'ehdev:missing-entity-labels';
     public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
     public const OPTION_IGNORE_ORO = 'ignore-oro';
     public const OPTION_IGNORE_EXTEND = 'ignore-extend';
@@ -34,13 +35,12 @@ class MissingEntityLabelsCommand extends Command
         private readonly EntityPropertyTranslationProvider $entityPropertyTranslationProvider,
         private readonly ManagerRegistry $registry,
     ) {
-        parent::__construct(self::NAME);
+        parent::__construct();
     }
 
     protected function configure(): void
     {
         $this
-            ->setDescription('Shows all Labels which are missing for entities')
             ->addOption(
                 self::OPTION_IGNORE_ORO,
                 null,
@@ -72,9 +72,6 @@ class MissingEntityLabelsCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'for specific entity'
             )
-            ->setAliases([
-                'ehdev:missingEntityLabels',
-            ])
         ;
     }
 

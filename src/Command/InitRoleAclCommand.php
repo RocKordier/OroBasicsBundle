@@ -8,34 +8,25 @@ use Doctrine\Persistence\ManagerRegistry;
 use Oro\Bundle\SecurityBundle\Acl\Exception\InvalidAclMaskException;
 use Oro\Bundle\SecurityBundle\Acl\Extension\AclExtensionInterface;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
+use Oro\Bundle\UserBundle\Entity\Repository\RoleRepository;
 use Oro\Bundle\UserBundle\Entity\Role;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
+#[AsCommand('ehdev:init-role-acl', 'Init Oro Roles and Acls', ['ehdev:initRoleAcl'])]
 class InitRoleAclCommand extends Command
 {
-    private const NAME = 'ehdev:init-role-acl';
-
     public function __construct(
         private readonly AclManager $aclManager,
-        private ManagerRegistry $objectManager
+        private readonly ManagerRegistry $objectManager,
+        private readonly RoleRepository $repository,
     ) {
-        parent::__construct(self::NAME);
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setName(self::NAME)
-            ->setDescription('Init Oro Roles and Acls')
-            ->setAliases([
-                'ehdev:initRoleAcl',
-            ])
-        ;
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -51,7 +42,7 @@ class InitRoleAclCommand extends Command
         return 0;
     }
 
-    protected function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader): void
+    private function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader): void
     {
         $persistRoles = [];
 
@@ -80,13 +71,13 @@ class InitRoleAclCommand extends Command
         }
 
         foreach ($persistRoles as $role) {
-            $this->objectManager->getManagerForClass(Role::class)->persist($role);
+            $this->objectManager->getManagerForClass(Role::class)?->persist($role);
         }
 
-        $this->objectManager->getManagerForClass(Role::class)->flush();
+        $this->objectManager->getManagerForClass(Role::class)?->flush();
     }
 
-    protected function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
+    private function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
     {
         if (!$this->aclManager->isAclEnabled()) {
             $output->writeln('<error>ACL not enabled. No ACL loaded!</error>');
@@ -118,7 +109,7 @@ class InitRoleAclCommand extends Command
         $output->writeln('Completed');
     }
 
-    protected function processPermission(
+    private function processPermission(
         SecurityIdentityInterface $sid,
         string $permission,
         array $acls
@@ -144,8 +135,10 @@ class InitRoleAclCommand extends Command
         }
     }
 
-    protected function getRole(string $roleName): ?Role
+    private function getRole(string $roleName): ?Role
     {
-        return $this->objectManager->getRepository(Role::class)->findOneBy(['role' => $roleName]);
+        /** @var Role|null $role */
+        $role = $this->repository->findOneBy(['role' => $roleName]);
+        return $role;
     }
 }
