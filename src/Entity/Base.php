@@ -9,6 +9,7 @@ use EHDev\BasicsBundle\Entity\Traits\CreatedUpdatedTrait;
 
 /**
  * @ORM\HasLifecycleCallbacks
+ *
  * @ORM\MappedSuperclass
  */
 #[ORM\HasLifecycleCallbacks]
@@ -19,7 +20,9 @@ class Base
 
     /**
      * @ORM\Id
+     *
      * @ORM\GeneratedValue()
+     *
      * @ORM\Column(type="integer")
      */
     #[ORM\Id]

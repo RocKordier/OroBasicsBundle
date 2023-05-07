@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Form\Extension;
 
-use function iter\toArray;
 use Oro\Bundle\DataGridBundle\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function iter\toArray;
 
 trait DatagridFilterTypeExtensionTrait
 {
