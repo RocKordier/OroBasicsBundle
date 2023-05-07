@@ -13,9 +13,13 @@ class OroOrganizationChoiceType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefault('class', Organization::class);
-        $resolver->setDefault('choice_label', 'name');
-        $resolver->setDefault('choice_value', 'name');
+        $resolver->setDefaults([
+            'class' => Organization::class,
+            'choice_label' => 'name',
+            'choice_value' => 'id',
+            'empty_data' => null,
+            'placeholder' => 'Choose an Organization',
+        ]);
     }
 
     public function getParent(): string

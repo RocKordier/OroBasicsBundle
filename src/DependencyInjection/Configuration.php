@@ -26,6 +26,10 @@ class Configuration implements ConfigurationInterface
                 'value' => null,
                 'type' => 'text',
             ],
+            'bg_organization' => [
+                'value' => null,
+                'type' => 'text',
+            ],
         ]);
 
         return $treeBuilder;

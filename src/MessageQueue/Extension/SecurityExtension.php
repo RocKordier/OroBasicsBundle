@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace EHDev\BasicsBundle\MessageQueue\Extension;
 
 use Doctrine\ORM\EntityManagerInterface;
-use EHDev\BasicsBundle\Exception\InvalidUserException;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\SecurityBundle\Authentication\Token\ConsoleToken;
@@ -29,36 +28,37 @@ class SecurityExtension extends AbstractExtension
 
             return;
         }
+        /** @var User $userConfig */
+        $userConfig = $this->configManager->get('ehdev_basics.bg_username');
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $userConfig->getUsername()]);
 
-        if (!$this->configManager->get('ehdev_basics.bg_username')) {
+        if (null === $user) {
+            $context->getLogger()->warning('User is not set or does not exist');
+
             return;
         }
 
-        /** @var string $username */
-        $username = $this->configManager->get('ehdev_basics.bg_username');
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
-
-        if (null == $user) {
-            throw new InvalidUserException(sprintf('The user "%s" does not exists! Check your configuration.', $username));
-        }
-
-        if ($name = $this->configManager->get('ehdev_basics.bg_organization')) {
-            /** @var Organization $organization */
-            $organization = $this->entityManager->getRepository(Organization::class)->findOneBy(['name' => $name]);
-        } else {
-            /** @var Organization $organization */
-            $organization = $user->getOrganizations()->first();
-        }
+        /** @var Organization $orgConfig */
+        $orgConfig = $this->configManager->get('ehdev_basics.bg_organization');
+        /** @var Organization|null $organization */
+        $organization = $this->entityManager->getRepository(Organization::class)->findOneBy(['id' => $orgConfig->getId()]) ?: $user->getOrganizations()->first();
 
         $token = new ConsoleToken();
         $token->setUser($user);
-        $token->setOrganization($organization);
+
+        if ($organization) {
+            $token->setOrganization($organization);
+        } else {
+            $context->getLogger()->warning('No Organization found');
+
+            return;
+        }
 
         $this->tokenStorage->setToken($token);
 
         $context->getLogger()->info('Authenticated user with username {username} and organization {name}.', [
-            'username' => $username,
-            'name' => $organization->getName(),
+            'username' => $token->getUser()?->getUsername(),
+            'name' => $token->getOrganization()->getName(),
         ]);
     }
 
