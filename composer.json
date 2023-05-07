@@ -2,7 +2,7 @@
     "name": "ehdev/oro-basics-bundle",
     "description": "Basic configuration, helper and tools for an oro application",
     "homepage": "https://github.com/RocKordier/OroBasicsBundle",
-    "keywords": ["Oro Platform", "Symfony2", "Basics"],
+    "keywords": ["Oro Platform", "Symfony", "Basics"],
     "license": "OSL-3.0",
     "authors": [
         {
@@ -18,32 +18,40 @@
     },
     "autoload": {
         "psr-4": {
-            "EHDev\\BasicsBundle\\": ["src/", "tests/"]
+            "EHDev\\BasicsBundle\\": ["src/"]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EHDev\\BasicsBundle\\": ["tests/"]
         }
     },
     "require": {
-        "php": "~8.1.0",
-        "oro/platform": "^5.0",
+        "php": "^8.2",
+        "oro/platform": "^5.1.0",
         "gedmo/doctrine-extensions": "^3.0",
         "stof/doctrine-extensions-bundle": "^1.7",
-        "spatie/emoji": "^3.0",
+        "spatie/emoji": "^4.0",
         "nikic/iter": "^2.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^9",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpstan/phpstan": "^1.7",
-        "friendsofphp/php-cs-fixer": "^3.8",
-        "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
-        "phpstan/phpstan-phpunit": "^1.1",
-        "phpstan/extension-installer": "^1.1"
+        "phpstan/phpstan": "^1.10",
+        "friendsofphp/php-cs-fixer": "^3.14",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.13",
+        "phpstan/phpstan-phpunit": "^1.3",
+        "phpstan/extension-installer": "^1.3"
     },
     "config" : {
         "fxp-asset" : {
             "enabled" : false
         },
         "allow-plugins": {
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "symfony/flex": true,
+            "php-http/discovery": true,
+            "symfony/runtime": true
         }
     },
     "minimum-stability": "dev",
