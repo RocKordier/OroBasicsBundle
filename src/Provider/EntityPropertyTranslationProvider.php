@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Provider;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
@@ -19,7 +19,7 @@ class EntityPropertyTranslationProvider
     public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
 
     public function __construct(
-        private readonly Registry $registry,
+        private readonly ManagerRegistry $registry,
         private readonly VirtualFieldProviderInterface $virtualFieldProvider,
         private readonly PropertyTranslationManager $propertyTranslationManager
     ) {}

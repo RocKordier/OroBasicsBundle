@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Command;
 
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
+use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\SecurityBundle\Acl\Exception\InvalidAclMaskException;
 use Oro\Bundle\SecurityBundle\Acl\Extension\AclExtensionInterface;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
-use Oro\Bundle\UserBundle\Entity\Repository\RoleRepository;
 use Oro\Bundle\UserBundle\Entity\Role;
 use Oro\Component\Config\Loader\CumulativeConfigLoader;
 use Oro\Component\Config\Loader\YamlCumulativeFileLoader;
@@ -21,11 +21,14 @@ use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 #[AsCommand('ehdev:init-role-acl', 'Init Oro Roles and Acls', ['ehdev:initRoleAcl'])]
 class InitRoleAclCommand extends Command
 {
+    private EntityRepository $repository;
+
     public function __construct(
         private readonly AclManager $aclManager,
-        private readonly ManagerRegistry $objectManager,
-        private readonly RoleRepository $repository,
+        private readonly DoctrineHelper $doctrineHelper
     ) {
+        $this->repository = $this->doctrineHelper->getEntityRepositoryForClass(Role::class);
+
         parent::__construct();
     }
 
@@ -71,10 +74,10 @@ class InitRoleAclCommand extends Command
         }
 
         foreach ($persistRoles as $role) {
-            $this->objectManager->getManagerForClass(Role::class)?->persist($role);
+            $this->doctrineHelper->getEntityManagerForClass(Role::class)?->persist($role);
         }
 
-        $this->objectManager->getManagerForClass(Role::class)?->flush();
+        $this->doctrineHelper->getEntityManagerForClass(Role::class)?->flush();
     }
 
     private function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
@@ -139,6 +142,7 @@ class InitRoleAclCommand extends Command
     {
         /** @var Role|null $role */
         $role = $this->repository->findOneBy(['role' => $roleName]);
+
         return $role;
     }
 }

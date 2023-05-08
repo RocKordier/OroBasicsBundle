@@ -1,36 +1,16 @@
 services:
-    EHDev\BasicsBundle\Command\InitRoleAclCommand:
-        arguments:
-            - '@oro_security.acl.manager'
-            - '@doctrine'
-        tags:
-            - { name: console.command, command: ehdev:init-role-acl }
-
-    EHDev\BasicsBundle\Command\MissingEntityLabelsCommand:
-        arguments:
-            - '@ehdev.orobasics.provider.entity_property_translation_provider'
-            - '@doctrine'
-        tags:
-            - { name: console.command, command: ehdev:missing-entity-labels }
-
-    ehdev.orobasics.property_translation.manager:
-        class: EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager
-        arguments:
-            - '@translator'
-
-    ehdev.orobasics.provider.entity_property_translation_provider:
-        class: EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider
-        arguments:
-            - '@doctrine'
-            - '@oro_entity.virtual_field_provider'
-            - '@ehdev.orobasics.property_translation.manager'
-
-    ehdev.message_queue.ensure_user_extension:
-        class: EHDev\BasicsBundle\MessageQueue\Extension\SecurityExtension
+    _defaults:
         public: false
-        arguments:
-            - '@oro_config.manager'
-            - '@doctrine.orm.entity_manager'
-            - '@security.token_storage'
-        tags:
-            - { name: oro_message_queue.consumption.extension }
+        autowire: true
+        autoconfigure: true
+
+    EHDev\BasicsBundle\:
+        resource: '../../*'
+        exclude: '../../{Entity,Resources,EHDevBasicsBundle.php}'
+
+    EHDev\BasicsBundle\Provider\EntityPropertyTranslationProvider:
+        bind:
+            $virtualFieldProvider: '@oro_entity.virtual_field_provider'
+    EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager:
+        bind:
+            $translator: '@translator'
