@@ -12,14 +12,14 @@ Installation
 
 With composer, add:
 
-```json
-{
-    "require" : {
-        "ehdev/oro-basics-bundle": "^0.1"
-    }
-}
+```bash
+composer require ehdev/oro-basics-bundle:^5.1
 ```
 
 Components
 ----------
 [Commands](./src/Resources/doc/Commands.md)
+
+[Form / Extensions](./src/Resources/doc/Form/Extensions.md)
+
+[Migration / Enum](./src/Resources/doc/Migration/Enum.md)
