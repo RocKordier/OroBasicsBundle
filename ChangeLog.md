@@ -13,3 +13,11 @@
 ## v0.1.2
 
 - Make missing entity command ready for ci and count missing things
+
+## v5.1.0
+- [Feature] Enable autowire and autoconfigure
+- [Feature] Use new Symfony features (PHP-Attributes)
+- [Fix] Security Extension for Message Queue Consumer
+- [Fix] Deprecations
+- [Fix] CS / PHPStan
+- [Fix] Documentation
