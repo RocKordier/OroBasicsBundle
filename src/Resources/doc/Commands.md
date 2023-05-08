@@ -20,7 +20,7 @@ ROLE_NAMESPACE_BUNDLE_ROLE1_ID:
         entity|Oro\Bundle\EmailBundle\Entity\EmailUser: [VIEW_BASIC, CREATE_BASIC, EDIT_BASIC]
         entity|Oro\Bundle\OrganizationBundle\Entity\Organization: [VIEW_SYSTEM]
         entity|Oro\Bundle\TagBundle\Entity\Tag: [VIEW_SYSTEM]
-        action|oro_dataaudit_history: [EXECUTE]
+        entity|Oro\Bundle\DataAuditBundle\Entity\AbstractAudit: [VIEW_GLOBAL]
         action|oro_search: [EXECUTE]
 ```
 !ATTENTION!: ATM it's not supported to rename or delete roles.
