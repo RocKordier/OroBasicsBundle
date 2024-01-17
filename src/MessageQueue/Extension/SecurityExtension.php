@@ -30,21 +30,29 @@ class SecurityExtension extends AbstractExtension
 
             return;
         }
-        /** @var User $userConfig */
+        /** @var User|null $userConfig */
         $userConfig = $this->configManager->get('ehdev_basics.bg_username');
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $userConfig->getUsername()]);
+        if (null === $userConfig) {
+            $context->getLogger()->warning('User is not set or does not exist');
 
+            return;
+        }
+        
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $userConfig->getUsername()]);
         if (null === $user) {
             $context->getLogger()->warning('User is not set or does not exist');
 
             return;
         }
 
-        /** @var Organization $orgConfig */
+        /** @var Organization|null $orgConfig */
         $orgConfig = $this->configManager->get('ehdev_basics.bg_organization');
-        /** @var Organization|null $organization */
-        $organization = $this->entityManager->getRepository(Organization::class)->findOneBy(['id' => $orgConfig->getId()]) ?: $user->getOrganizations()->first();
-
+        if (null === $orgConfig) {
+            $organization = $user->getOrganizations()->first();
+        } else {
+            $organization = $this->entityManager->getRepository(Organization::class)->findOneBy(['id' => $orgConfig->getId()]) ?: $user->getOrganizations()->first();
+        }
+        
         $token = new ConsoleToken();
         $token->setUser($user);
 
