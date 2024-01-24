@@ -26,7 +26,6 @@ system_configuration:
                 required: false
             priority: 30
         ehdev_basics.bg_username:
-            data_type: string
             type: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType
             ui_only: true
             options:
@@ -35,7 +34,6 @@ system_configuration:
                 required: false
             priority: 10
         ehdev_basics.bg_organization:
-            data_type: string
             type: EHDev\BasicsBundle\Form\Type\OroOrganizationChoiceType
             ui_only: true
             options:
