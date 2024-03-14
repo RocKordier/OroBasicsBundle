@@ -27,7 +27,7 @@ class SecurityExtensionTest extends TestCase
 
     private ObjectProphecy|ConfigManager $configManager;
     private ObjectProphecy|EntityManagerInterface $entityManager;
-    private ObjectProphecy|TokenStorageInterface$tokenStorage;
+    private ObjectProphecy|TokenStorageInterface $tokenStorage;
     private ObjectProphecy|SecurityExtension $extension;
 
     protected function setUp(): void

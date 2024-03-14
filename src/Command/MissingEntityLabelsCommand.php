@@ -96,9 +96,9 @@ class MissingEntityLabelsCommand extends Command
             $entity = $input->getOption(self::OPTION_ENTITY);
 
             if (
-                ($input->getOption(self::OPTION_IGNORE_ORO) && preg_match('/^Oro[^s]/i', $className)) ||
-                ($input->getOption(self::OPTION_IGNORE_EXTEND) && preg_match('/^Extend[^s]/i', $className)) ||
-                ($entity !== $className && !is_null($entity))
+                ($input->getOption(self::OPTION_IGNORE_ORO) && preg_match('/^Oro[^s]/i', $className))
+                || ($input->getOption(self::OPTION_IGNORE_EXTEND) && preg_match('/^Extend[^s]/i', $className))
+                || ($entity !== $className && !is_null($entity))
             ) {
                 continue;
             }

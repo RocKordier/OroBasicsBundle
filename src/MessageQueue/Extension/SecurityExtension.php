@@ -37,7 +37,7 @@ class SecurityExtension extends AbstractExtension
 
             return;
         }
-        
+
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $userConfig->getUsername()]);
         if (null === $user) {
             $context->getLogger()->warning('User is not set or does not exist');
@@ -52,7 +52,7 @@ class SecurityExtension extends AbstractExtension
         } else {
             $organization = $this->entityManager->getRepository(Organization::class)->findOneBy(['id' => $orgConfig->getId()]) ?: $user->getOrganizations()->first();
         }
-        
+
         $token = new ConsoleToken();
         $token->setUser($user);
 
