@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\DependencyInjection\Compiler;
 
+use Oro\Bundle\UIBundle\Provider\WidgetContextProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -19,6 +20,7 @@ class AutowireAliasPass implements CompilerPassInterface
         'oro_address.form.listener.address' => 'Oro\Bundle\AddressBundle\Form\EventListener\AddressCountryAndRegionSubscriber',
         'oro_dataaudit.audit_config_provider' => 'Oro\Bundle\DataAuditBundle\Provider\AuditConfigProvider',
         'oro_security.acl.manager' => 'Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager',
+        'oro_ui.provider.widget_context' => WidgetContextProvider::class,
     ];
 
     public function process(ContainerBuilder $container): void
