@@ -1,0 +1,20 @@
+{% macro render(value, copiedMsg='oro.ui.element_value.messages.copied') %}
+    {% import '@OroUI/macros.html.twig' as UI %}
+
+    {% set ehdev_ctc_id = 'ehdev-ctc-id-'|uniqid %}
+    <span id="{{ ehdev_ctc_id }}" style="display: none">{{ value }}</span>
+    {{- UI.clientLink({
+        iCss: 'fa-copy',
+        title: label|default('oro.ui.button.copy_to_clipboard.label')|trans,
+        labelInIcon: true,
+        pageComponent: {
+            view: {
+                view: 'oroui/js/app/views/element-value-copy-to-clipboard-view',
+                elementSelector: '#' ~ ehdev_ctc_id,
+                messages: {
+                    copied: copiedMsg,
+                }
+            }
+        }
+    }) -}}
+{% endmacro %}
