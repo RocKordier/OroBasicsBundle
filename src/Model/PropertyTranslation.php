@@ -14,7 +14,7 @@ class PropertyTranslation
 
     private string $fieldType;
 
-    /** @var MessageCatalogueInterface[] */
+    /** @var array<MessageCatalogueInterface> */
     private array $catalogues;
 
     public function getPropertyName(): string
@@ -22,7 +22,7 @@ class PropertyTranslation
         return $this->propertyName;
     }
 
-    public function setPropertyName(string $propertyName): PropertyTranslation
+    public function setPropertyName(string $propertyName): self
     {
         $this->propertyName = $propertyName;
 
@@ -34,7 +34,7 @@ class PropertyTranslation
         return $this->translationKey;
     }
 
-    public function setTranslationKey(string $translationKey): PropertyTranslation
+    public function setTranslationKey(string $translationKey): self
     {
         $this->translationKey = $translationKey;
 
@@ -43,7 +43,7 @@ class PropertyTranslation
 
     public function getTranslation(string $locale): string
     {
-        if (array_key_exists($locale, $this->catalogues)) {
+        if (\array_key_exists($locale, $this->catalogues)) {
             return $this->catalogues[$locale]->get($this->translationKey);
         }
 
@@ -55,7 +55,7 @@ class PropertyTranslation
         return $this->fieldType;
     }
 
-    public function setFieldType(string $fieldType): PropertyTranslation
+    public function setFieldType(string $fieldType): self
     {
         $this->fieldType = $fieldType;
 
@@ -64,7 +64,7 @@ class PropertyTranslation
 
     public function isTranslated(string $locale): bool
     {
-        if (array_key_exists($locale, $this->catalogues)) {
+        if (\array_key_exists($locale, $this->catalogues)) {
             return $this->catalogues[$locale]->has($this->translationKey);
         }
 

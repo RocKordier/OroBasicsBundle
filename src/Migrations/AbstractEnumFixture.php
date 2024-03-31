@@ -26,7 +26,7 @@ abstract class AbstractEnumFixture extends AbstractFixture
         $priority = $this->getLastPriority($enumRepo);
 
         foreach ($this->getData() as $id => $name) {
-            if (!is_string($id) || 0 === strlen($id)) {
+            if (!\is_string($id) || '' === $id) {
                 $id = $name;
             }
             $id = ExtendHelper::buildEnumValueId($id);
@@ -51,10 +51,10 @@ abstract class AbstractEnumFixture extends AbstractFixture
      */
     private function getLastPriority(EnumValueRepository $repo): int
     {
-        return intval($repo->createQueryBuilder('e')
+        return (int) $repo->createQueryBuilder('e')
             ->select('MAX(e.priority)')
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR));
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 }

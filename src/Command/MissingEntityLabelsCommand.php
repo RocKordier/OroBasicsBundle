@@ -98,7 +98,7 @@ class MissingEntityLabelsCommand extends Command
             if (
                 ($input->getOption(self::OPTION_IGNORE_ORO) && preg_match('/^Oro[^s]/i', $className))
                 || ($input->getOption(self::OPTION_IGNORE_EXTEND) && preg_match('/^Extend[^s]/i', $className))
-                || ($entity !== $className && !is_null($entity))
+                || ($entity !== $className && null !== $entity)
             ) {
                 continue;
             }
@@ -122,22 +122,22 @@ class MissingEntityLabelsCommand extends Command
                     $translation->getFieldType(),
                 ];
                 foreach ($locales as $locale) {
-                    array_push($row, $translation->isTranslated($locale) ? Emoji::checkMarkButton() : Emoji::crossMark());
+                    $row[] = $translation->isTranslated($locale) ? Emoji::checkMarkButton() : Emoji::crossMark();
                 }
-                array_push($row, $translation->getTranslationKey());
+                $row[] = $translation->getTranslationKey();
                 $tableHelper->addRow($row);
             }
 
-            $io->section(sprintf('Found %s missing labels in %s', count($missingTranslations), $className));
+            $io->section(sprintf('Found %s missing labels in %s', \count($missingTranslations), $className));
             $tableHelper->setStyle('symfony-style-guide');
             $tableHelper->render();
             $io->newLine(2);
 
-            if (count($missingTranslations) > 0) {
+            if (\count($missingTranslations) > 0) {
                 ++$entityCount;
             }
 
-            $missingCount += count($missingTranslations);
+            $missingCount += \count($missingTranslations);
         }
 
         if (0 === $missingCount) {
@@ -164,19 +164,19 @@ class MissingEntityLabelsCommand extends Command
         $io->note(
             sprintf(
                 'Available Languages: %s',
-                join(', ', $availableLanguageCodes)
+                implode(', ', $availableLanguageCodes)
             )
         );
 
         $notActiveLocales = array_filter($locales, function (string $locale) use ($availableLanguageCodes) {
-            return !in_array($locale, $availableLanguageCodes, true);
+            return !\in_array($locale, $availableLanguageCodes, true);
         });
 
         if ($notActiveLocales) {
             $io->warning(
                 sprintf(
                     'Some locales are not activated in Oro yet so that can cause to some problems. %s',
-                    join(', ', $notActiveLocales)
+                    implode(', ', $notActiveLocales)
                 )
             );
         }

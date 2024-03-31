@@ -20,16 +20,16 @@ trait DatagridFilterTypeExtensionTrait
 
             $value = array_flip($value);
 
-            if ($ehdevOpt && array_key_exists('filter_sort', $ehdevOpt) && is_array($ehdevOpt['filter_sort'])) {
+            if ($ehdevOpt && \array_key_exists('filter_sort', $ehdevOpt) && \is_array($ehdevOpt['filter_sort'])) {
                 $filterSort = $ehdevOpt['filter_sort'];
 
                 /** @var string $type */
                 $type = current(toArray(self::getExtendedTypes()));
                 foreach (array_reverse($filterSort) as $filter) {
-                    if (defined($type.'::'.$filter)) {
+                    if (\defined($type.'::'.$filter)) {
                         $arrayKey = null;
-                        if (array_key_exists(strval(constant($type.'::'.$filter)), $value)) {
-                            $arrayKey = constant($type.'::'.$filter);
+                        if (\array_key_exists((string) \constant($type.'::'.$filter), $value)) {
+                            $arrayKey = \constant($type.'::'.$filter);
                         } else {
                             throw new InvalidArgumentException('Filter not defined in form type');
                         }

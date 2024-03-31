@@ -70,7 +70,7 @@ class EntityPropertyTranslationProvider
     /**
      * @param class-string $class
      */
-    private function getClassMetaData(string $class): ClassMetaData
+    private function getClassMetaData(string $class): ClassMetadata
     {
         /** @var ObjectManager $manager */
         $manager = $this->registry->getManagerForClass($class);

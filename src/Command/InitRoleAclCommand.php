@@ -51,13 +51,13 @@ class InitRoleAclCommand extends Command
 
         foreach ($configLoader->load() as $resource) {
             foreach ($resource->data as $roleName => $roleConfigData) {
-                if (!array_key_exists('label', $roleConfigData)) {
+                if (!\array_key_exists('label', $roleConfigData)) {
                     $output->writeln(sprintf('<error>No label for role: %s</error>', $roleName));
                     continue;
                 }
 
                 $label = $roleConfigData['label'];
-                $description = array_key_exists('description', $roleConfigData) ? $roleConfigData['description'] : '';
+                $description = \array_key_exists('description', $roleConfigData) ? $roleConfigData['description'] : '';
 
                 if (!$role = $this->getRole($roleName)) {
                     $output->writeln('Create new role: '.$roleName.' ('.$label.' - '.$description.')');
@@ -90,7 +90,7 @@ class InitRoleAclCommand extends Command
 
         foreach ($configLoader->load() as $resource) {
             foreach ($resource->data as $roleName => $roleConfigData) {
-                if (($role = $this->getRole($roleName)) && array_key_exists('permissions', $roleConfigData)) {
+                if (($role = $this->getRole($roleName)) && \array_key_exists('permissions', $roleConfigData)) {
                     $output->writeln('INIT role: '.$roleName);
                     $sid = $this->aclManager->getSid($role);
                     foreach ($roleConfigData['permissions'] as $permission => $acls) {

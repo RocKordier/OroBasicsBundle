@@ -13,7 +13,7 @@ trait LifecycleTrait
     #[ORM\PrePersist]
     public function prePersist(): void
     {
-        @trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', E_USER_DEPRECATED);
+        @trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', \E_USER_DEPRECATED);
 
         $dateTime = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->createdAt = $dateTime;
@@ -23,7 +23,7 @@ trait LifecycleTrait
     #[ORM\PreUpdate]
     public function preUpdate(): void
     {
-        @trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', E_USER_DEPRECATED);
+        @trigger_error('The method Base::prePersist ist deprecated. Please extend from the AbstractEntity class!', \E_USER_DEPRECATED);
 
         $this->updatedAt = new \DateTime('now', new \DateTimeZone('UTC'));
     }

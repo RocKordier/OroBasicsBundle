@@ -18,7 +18,7 @@ class IsWidgetFlow implements VoterInterface
 
     public function vote(TokenInterface $token, $subject, array $attributes)
     {
-        if (!in_array(self::VOTER, $attributes)) {
+        if (!\in_array(self::VOTER, $attributes)) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
