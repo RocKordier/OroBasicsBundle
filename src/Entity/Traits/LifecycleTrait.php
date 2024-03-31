@@ -10,9 +10,6 @@ trait LifecycleTrait
 {
     use CreatedUpdatedTrait;
 
-    /**
-     * @ORM\PrePersist
-     */
     #[ORM\PrePersist]
     public function prePersist(): void
     {
@@ -23,9 +20,6 @@ trait LifecycleTrait
         $this->updatedAt = $dateTime;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
     #[ORM\PreUpdate]
     public function preUpdate(): void
     {

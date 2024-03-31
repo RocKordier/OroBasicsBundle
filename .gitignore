@@ -9,3 +9,4 @@ components/
 composer.lock
 /coverage
 /.php_cs.cache
+/.build

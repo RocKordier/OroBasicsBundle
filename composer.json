@@ -3,7 +3,7 @@
     "description": "Basic configuration, helper and tools for an oro application",
     "homepage": "https://github.com/RocKordier/OroBasicsBundle",
     "keywords": ["Oro Platform", "Symfony", "Basics"],
-    "license": "OSL-3.0",
+    "license": "MIT",
     "authors": [
         {
             "name": "[RocKordier] Eric Hertwig",
@@ -27,19 +27,19 @@
         }
     },
     "require": {
-        "php": "^8.2",
-        "oro/platform": "^5.1.0",
-        "gedmo/doctrine-extensions": "^3.0",
+        "php": "^8.3",
+        "oro/platform": "^6.0.0",
+        "gedmo/doctrine-extensions": "^3.10",
         "stof/doctrine-extensions-bundle": "^1.7",
-        "spatie/emoji": "^4.0",
-        "nikic/iter": "^2.2"
+        "spatie/emoji": "^4.1",
+        "nikic/iter": "^2.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^9",
-        "phpspec/prophecy-phpunit": "^2.0",
+        "phpspec/prophecy-phpunit": "^2.2",
         "phpstan/phpstan": "^1.10",
-        "friendsofphp/php-cs-fixer": "^3.14",
-        "kubawerlos/php-cs-fixer-custom-fixers": "^3.13",
+        "friendsofphp/php-cs-fixer": "3.39.1",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.18",
         "phpstan/phpstan-phpunit": "^1.3",
         "phpstan/extension-installer": "^1.3"
     },

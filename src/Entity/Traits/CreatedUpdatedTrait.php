@@ -6,42 +6,18 @@ namespace EHDev\BasicsBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use Oro\Bundle\EntityConfigBundle\Metadata\Attribute\ConfigField;
 
 trait CreatedUpdatedTrait
 {
-    /**
-     * @ORM\Column(name="created_at", type="datetime")
-     *
-     * @Gedmo\Timestampable(on="create")
-     *
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.created_at"
-     *          },
-     *      }
-     * )
-     */
     #[ORM\Column('created_at', type: 'datetime')]
     #[Gedmo\Timestampable(on: 'create')]
+    #[ConfigField(defaultValues: ['entity' => ['label' => 'oro.ui.created_at']])]
     protected \DateTime $createdAt;
 
-    /**
-     * @ORM\Column(name="updated_at", type="datetime")
-     *
-     * @Gedmo\Timestampable(on="update")
-     *
-     * @ConfigField(
-     *      defaultValues={
-     *          "entity"={
-     *              "label"="oro.ui.updated_at"
-     *          },
-     *      }
-     * )
-     */
     #[ORM\Column('updated_at', type: 'datetime')]
     #[Gedmo\Timestampable(on: 'update')]
+    #[ConfigField(defaultValues: ['entity' => ['label' => 'oro.ui.updated_at']])]
     protected \DateTime $updatedAt;
 
     public function setCreatedAt(\DateTime $createdAt): self
