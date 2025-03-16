@@ -64,7 +64,7 @@ class EntityPropertyTranslationProvider
         $associationNames = $classMetaData->getAssociationNames();
         $virtualFields = $this->virtualFieldProvider->getVirtualFields($className);
 
-        return $fieldNames + $associationNames + $virtualFields;
+        return array_merge($fieldNames, $associationNames, $virtualFields);
     }
 
     /**
