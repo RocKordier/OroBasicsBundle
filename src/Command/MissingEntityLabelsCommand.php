@@ -112,28 +112,28 @@ class MissingEntityLabelsCommand extends Command
                 return !$translation->isPartialTranslatied();
             });
 
-            $tableHelper = new Table($output);
-            $tableHelper->setHeaders(array_merge(['Property', 'Data Type'], $locales, ['transKey']));
-
-            /** @var PropertyTranslation $translation */
-            foreach ($translations as $translation) {
-                $row = [
-                    $translation->getPropertyName(),
-                    $translation->getFieldType(),
-                ];
-                foreach ($locales as $locale) {
-                    $row[] = $translation->isTranslated($locale) ? Emoji::checkMarkButton() : Emoji::crossMark();
-                }
-                $row[] = $translation->getTranslationKey();
-                $tableHelper->addRow($row);
-            }
-
-            $io->section(sprintf('Found %s missing labels in %s', \count($missingTranslations), $className));
-            $tableHelper->setStyle('symfony-style-guide');
-            $tableHelper->render();
-            $io->newLine(2);
-
             if (\count($missingTranslations) > 0) {
+                $tableHelper = new Table($output);
+                $tableHelper->setHeaders(array_merge(['Property', 'Data Type'], $locales, ['transKey']));
+
+                /** @var PropertyTranslation $translation */
+                foreach ($translations as $translation) {
+                    $row = [
+                        $translation->getPropertyName(),
+                        $translation->getFieldType(),
+                    ];
+                    foreach ($locales as $locale) {
+                        $row[] = $translation->isTranslated($locale) ? Emoji::checkMarkButton() : Emoji::crossMark();
+                    }
+                    $row[] = $translation->getTranslationKey();
+                    $tableHelper->addRow($row);
+                }
+
+                $io->section(sprintf('Found %s missing labels in %s', \count($missingTranslations), $className));
+                $tableHelper->setStyle('symfony-style-guide');
+                $tableHelper->render();
+                $io->newLine(2);
+
                 ++$entityCount;
             }
 
@@ -141,6 +141,8 @@ class MissingEntityLabelsCommand extends Command
         }
 
         if (0 === $missingCount) {
+            $io->success('Everything is translated!');
+
             return 0;
         }
 
