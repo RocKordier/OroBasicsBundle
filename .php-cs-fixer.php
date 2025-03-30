@@ -36,6 +36,7 @@ return (new PhpCsFixer\Config())
         '@Symfony:risky' => true,
         'declare_strict_types' => true,
         'nullable_type_declaration_for_default_null_value' => false,
+        'phpdoc_array_type' => true,
         'phpdoc_separation' => [
             'groups' => [['ORM\\*'], ['Assert\\*']],
         ],
@@ -54,7 +55,6 @@ return (new PhpCsFixer\Config())
         NoUselessStrlenFixer::name() => true,
         PhpUnitAssertArgumentsOrderFixer::name() => true,
         PhpUnitDedicatedAssertFixer::name() => true,
-        PhpdocArrayStyleFixer::name() => true,
     ])
     ->setLineEnding("\n")
     ->setRiskyAllowed(true)
