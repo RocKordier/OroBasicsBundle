@@ -1,0 +1,7 @@
+procs:
+  stan:
+    shell: "make stan"
+    autostart: false
+  cs:
+    shell: "make cs"
+    autostart: false
