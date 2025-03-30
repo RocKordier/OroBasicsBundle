@@ -14,7 +14,7 @@ trait ResponseTrait
         string|TemplateWrapper $twigTemplate = '',
         array $additionalParameter = [],
         int $statusCode = 200,
-        array $headers = []
+        array $headers = [],
     ): Response {
         if ($handleResponse instanceof Response) {
             return $handleResponse;

@@ -20,7 +20,7 @@ class SecurityExtension extends AbstractExtension
     public function __construct(
         private readonly ConfigManager $configManager,
         private readonly EntityManagerInterface $entityManager,
-        private readonly TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage,
     ) {}
 
     public function onPreReceived(Context $context): void

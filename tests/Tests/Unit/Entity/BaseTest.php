@@ -14,7 +14,7 @@ class BaseTest extends TestCase
 {
     private Base $testClass;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->testClass = new Base();
     }

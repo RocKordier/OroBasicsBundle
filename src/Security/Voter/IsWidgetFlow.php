@@ -13,7 +13,7 @@ class IsWidgetFlow implements VoterInterface
     public const VOTER = 'EHDEV_IS_WIDGET_FLOW_VOTER';
 
     public function __construct(
-        private readonly WidgetContextProvider $widgetContext
+        private readonly WidgetContextProvider $widgetContext,
     ) {}
 
     public function vote(TokenInterface $token, $subject, array $attributes)

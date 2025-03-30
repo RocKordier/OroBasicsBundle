@@ -129,7 +129,7 @@ class MissingEntityLabelsCommand extends Command
                     $tableHelper->addRow($row);
                 }
 
-                $io->section(sprintf('Found %s missing labels in %s', \count($missingTranslations), $className));
+                $io->section(\sprintf('Found %s missing labels in %s', \count($missingTranslations), $className));
                 $tableHelper->setStyle('symfony-style-guide');
                 $tableHelper->render();
                 $io->newLine(2);
@@ -146,7 +146,7 @@ class MissingEntityLabelsCommand extends Command
             return 0;
         }
 
-        $io->error(sprintf('%s missing Labels found for %s Entities', $missingCount, $entityCount));
+        $io->error(\sprintf('%s missing Labels found for %s Entities', $missingCount, $entityCount));
 
         return 1;
     }
@@ -164,7 +164,7 @@ class MissingEntityLabelsCommand extends Command
         }
 
         $io->note(
-            sprintf(
+            \sprintf(
                 'Available Languages: %s',
                 implode(', ', $availableLanguageCodes)
             )
@@ -176,7 +176,7 @@ class MissingEntityLabelsCommand extends Command
 
         if ($notActiveLocales) {
             $io->warning(
-                sprintf(
+                \sprintf(
                     'Some locales are not activated in Oro yet so that can cause to some problems. %s',
                     implode(', ', $notActiveLocales)
                 )

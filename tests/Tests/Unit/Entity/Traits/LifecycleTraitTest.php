@@ -14,7 +14,7 @@ class LifecycleTraitTest extends TestCase
 {
     private LifecycleTraitTestClass $testClass;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->testClass = new LifecycleTraitTestClass();
     }

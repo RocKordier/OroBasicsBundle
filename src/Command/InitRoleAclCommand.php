@@ -25,7 +25,7 @@ class InitRoleAclCommand extends Command
 
     public function __construct(
         private readonly AclManager $aclManager,
-        private readonly DoctrineHelper $doctrineHelper
+        private readonly DoctrineHelper $doctrineHelper,
     ) {
         $this->repository = $this->doctrineHelper->getEntityRepositoryForClass(Role::class);
 
@@ -52,7 +52,7 @@ class InitRoleAclCommand extends Command
         foreach ($configLoader->load() as $resource) {
             foreach ($resource->data as $roleName => $roleConfigData) {
                 if (!\array_key_exists('label', $roleConfigData)) {
-                    $output->writeln(sprintf('<error>No label for role: %s</error>', $roleName));
+                    $output->writeln(\sprintf('<error>No label for role: %s</error>', $roleName));
                     continue;
                 }
 
@@ -115,7 +115,7 @@ class InitRoleAclCommand extends Command
     private function processPermission(
         SecurityIdentityInterface $sid,
         string $permission,
-        array $acls
+        array $acls,
     ): void {
         $oId = $this->aclManager->getOid(str_replace('|', ':', $permission));
         $extension = $this->aclManager->getExtensionSelector()->select($oId);

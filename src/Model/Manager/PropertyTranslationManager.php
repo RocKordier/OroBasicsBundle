@@ -10,7 +10,7 @@ use Symfony\Component\Translation\DataCollectorTranslator;
 class PropertyTranslationManager
 {
     public function __construct(
-        private readonly DataCollectorTranslator $translator
+        private readonly DataCollectorTranslator $translator,
     ) {}
 
     public function createPropertyTranslation(string $propertyName, string $translationKey, string $fieldType, array $locales): PropertyTranslation

@@ -14,7 +14,7 @@ class CreatedUpdatedTraitTest extends TestCase
 {
     private CreatedUpdatedTraitTestClass $testClass;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->testClass = new CreatedUpdatedTraitTestClass();
     }

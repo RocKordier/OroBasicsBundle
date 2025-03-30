@@ -9,11 +9,11 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager;
-use Oro\Bundle\EntityConfigBundle\Exception\RuntimeException;
 use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Bundle\EntityConfigBundle\Config\ConfigManager;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
 use Oro\Bundle\EntityConfigBundle\Entity\FieldConfigModel;
+use Oro\Bundle\EntityConfigBundle\Exception\RuntimeException;
 use Oro\Bundle\UIBundle\Tools\EntityLabelBuilder;
 
 class EntityPropertyTranslationProvider
@@ -50,7 +50,6 @@ class EntityPropertyTranslationProvider
         $propertyNames = $this->getPropertyNames($classMetaData, $className);
 
         foreach ($propertyNames as $propertyName) {
-
             try {
                 $propertyConfig = $this->configManager->getFieldConfig('entity', $className, $propertyName);
                 $label = $propertyConfig->get('label');
