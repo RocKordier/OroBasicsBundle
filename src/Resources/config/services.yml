@@ -13,4 +13,4 @@ services:
             $virtualFieldProvider: '@oro_entity.virtual_field_provider'
     EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager:
         bind:
-            $translator: '@translator'
+            $translator: '@translator.default'

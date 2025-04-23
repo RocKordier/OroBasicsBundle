@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace EHDev\BasicsBundle\Model\Manager;
 
 use EHDev\BasicsBundle\Model\PropertyTranslation;
-use Symfony\Component\Translation\DataCollectorTranslator;
+use Oro\Bundle\TranslationBundle\Translation\Translator;
 
 class PropertyTranslationManager
 {
     public function __construct(
-        private readonly DataCollectorTranslator $translator,
+        private readonly Translator $translator,
     ) {}
 
     public function createPropertyTranslation(string $propertyName, string $translationKey, string $fieldType, array $locales): PropertyTranslation
