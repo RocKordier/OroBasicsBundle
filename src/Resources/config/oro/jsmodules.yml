@@ -1,0 +1,6 @@
+aliases:
+    ehdevbasics/js/form/checkbox-cell: ehdevbasics/js/form/checkbox-cell
+
+dynamic-imports:
+    ehdevbasics_checkbox:
+        - ehdevbasics/js/form/checkbox-cell
