@@ -39,7 +39,7 @@ define(function(require) {
 
             if (options.title) {
                 const $label = $('<label class="form-check-label">')
-                    .text(options.title).prepend($checkbox);
+                    .html(options.title).prepend($checkbox);
                 $el.append($label);
             }
         }
