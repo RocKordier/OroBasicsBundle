@@ -39,37 +39,72 @@ class InitRoleAclCommand extends Command
             new YamlCumulativeFileLoader('Resources/config/ehdev/acl_roles.yml')
         );
 
-        $this->initRoles($output, $configLoader);
-        $this->initAcl($output, $configLoader);
+        $mergedRoles = $this->mergeRoleConfigs($configLoader);
+
+        $this->initRoles($output, $mergedRoles);
+        $this->initAcl($output, $mergedRoles);
 
         return 0;
     }
 
-    private function initRoles(OutputInterface $output, CumulativeConfigLoader $configLoader): void
+    private function mergeRoleConfigs(CumulativeConfigLoader $configLoader): array
     {
-        $persistRoles = [];
+        $mergedRoles = [];
 
         foreach ($configLoader->load() as $resource) {
             foreach ($resource->data as $roleName => $roleConfigData) {
-                if (!\array_key_exists('label', $roleConfigData)) {
-                    $output->writeln(\sprintf('<error>No label for role: %s</error>', $roleName));
-                    continue;
-                }
-
-                $label = $roleConfigData['label'];
-                $description = \array_key_exists('description', $roleConfigData) ? $roleConfigData['description'] : '';
-
-                if (!$role = $this->getRole($roleName)) {
-                    $output->writeln('Create new role: '.$roleName.' ('.$label.' - '.$description.')');
-                    $newRole = new Role($roleName);
-                    $newRole->setLabel($label);
-                    $newRole->setExtendDescription($description);
-                    $persistRoles[] = $newRole;
+                if (!isset($mergedRoles[$roleName])) {
+                    $mergedRoles[$roleName] = $roleConfigData;
                 } else {
-                    $role->setLabel($label);
-                    $role->setExtendDescription($description);
-                    $persistRoles[] = $role;
+                    if (isset($roleConfigData['label'])) {
+                        $mergedRoles[$roleName]['label'] = $roleConfigData['label'];
+                    }
+                    if (isset($roleConfigData['description'])) {
+                        $mergedRoles[$roleName]['description'] = $roleConfigData['description'];
+                    }
+
+                    if (isset($roleConfigData['permissions'])) {
+                        if (!isset($mergedRoles[$roleName]['permissions'])) {
+                            $mergedRoles[$roleName]['permissions'] = [];
+                        }
+                        foreach ($roleConfigData['permissions'] as $permission => $acls) {
+                            if (!isset($mergedRoles[$roleName]['permissions'][$permission])) {
+                                $mergedRoles[$roleName]['permissions'][$permission] = $acls;
+                            } else {
+                                $mergedRoles[$roleName]['permissions'][$permission] = array_unique(array_merge($mergedRoles[$roleName]['permissions'][$permission], $acls));
+                            }
+                        }
+                    }
                 }
+            }
+        }
+
+        return $mergedRoles;
+    }
+
+    private function initRoles(OutputInterface $output, array $roles): void
+    {
+        $persistRoles = [];
+
+        foreach ($roles as $roleName => $roleConfigData) {
+            if (!\array_key_exists('label', $roleConfigData)) {
+                $output->writeln(\sprintf('<error>No label for role: %s</error>', $roleName));
+                continue;
+            }
+
+            $label = $roleConfigData['label'];
+            $description = \array_key_exists('description', $roleConfigData) ? $roleConfigData['description'] : '';
+
+            if (!$role = $this->getRole($roleName)) {
+                $output->writeln('Create new role: '.$roleName.' ('.$label.' - '.$description.')');
+                $newRole = new Role($roleName);
+                $newRole->setLabel($label);
+                $newRole->setExtendDescription($description);
+                $persistRoles[] = $newRole;
+            } else {
+                $role->setLabel($label);
+                $role->setExtendDescription($description);
+                $persistRoles[] = $role;
             }
         }
 
@@ -80,7 +115,7 @@ class InitRoleAclCommand extends Command
         $this->doctrineHelper->getEntityManagerForClass(Role::class)?->flush();
     }
 
-    private function initAcl(OutputInterface $output, CumulativeConfigLoader $configLoader): void
+    private function initAcl(OutputInterface $output, array $roles): void
     {
         if (!$this->aclManager->isAclEnabled()) {
             $output->writeln('<error>ACL not enabled. No ACL loaded!</error>');
@@ -88,24 +123,22 @@ class InitRoleAclCommand extends Command
             return;
         }
 
-        foreach ($configLoader->load() as $resource) {
-            foreach ($resource->data as $roleName => $roleConfigData) {
-                if (($role = $this->getRole($roleName)) && \array_key_exists('permissions', $roleConfigData)) {
-                    $output->writeln('INIT role: '.$roleName);
-                    $sid = $this->aclManager->getSid($role);
-                    foreach ($roleConfigData['permissions'] as $permission => $acls) {
-                        try {
-                            $this->processPermission($sid, $permission, $acls);
-                        } catch (InvalidAclMaskException $e) {
-                            $output->writeln('<error>\n\n'.$e->getMessage().'\n</error>');
-                        }
+        foreach ($roles as $roleName => $roleConfigData) {
+            if (($role = $this->getRole($roleName)) && \array_key_exists('permissions', $roleConfigData)) {
+                $output->writeln('INIT role: '.$roleName);
+                $sid = $this->aclManager->getSid($role);
+                foreach ($roleConfigData['permissions'] as $permission => $acls) {
+                    try {
+                        $this->processPermission($sid, $permission, $acls);
+                    } catch (InvalidAclMaskException $e) {
+                        $output->writeln('<error>\n\n'.$e->getMessage().'\n</error>');
                     }
-                } else {
-                    $output->writeln(
-                        '<comment>Role '.$roleName.' doesn\'t exist or role has no permissions. Skipped!</comment>'
-                    );
                 }
                 $this->aclManager->flush();
+            } else {
+                $output->writeln(
+                    '<comment>Role '.$roleName.' doesn\'t exist or role has no permissions. Skipped!</comment>'
+                );
             }
         }
 
