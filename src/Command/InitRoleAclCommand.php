@@ -16,6 +16,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
 #[AsCommand('ehdev:init-role-acl', 'Init Oro Roles and Acls', ['ehdev:initRoleAcl'])]
@@ -34,6 +35,9 @@ class InitRoleAclCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $style = new SymfonyStyle($input, $output);
+        $style->title('[EHDev] Init Oro Roles and Acls');
+        
         $configLoader = new CumulativeConfigLoader(
             'ehdev_roles',
             new YamlCumulativeFileLoader('Resources/config/ehdev/acl_roles.yml')
