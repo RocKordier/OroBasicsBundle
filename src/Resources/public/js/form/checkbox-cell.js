@@ -2,6 +2,8 @@ define(function(require) {
     const BaseComponent = require('oroui/js/app/components/base/component');
     const $ = require('jquery');
     const routing = require('routing');
+    const messenger = require('oroui/js/messenger');
+    const __ = require('orotranslation/js/translator');
 
     const CheckboxCell = BaseComponent.extend({
 
@@ -10,7 +12,9 @@ define(function(require) {
             route: null,
             routeParams: null,
             checked: false,
-            disabled: false
+            disabled: false,
+            flashMessage: null,
+            flashErrorMessage: null
         },
 
         constructor: function CheckboxCell(options) {
@@ -31,7 +35,16 @@ define(function(require) {
                             value: $checkbox.is(':checked')
                         })),
                         type: 'PATCH',
-                        error: () => $checkbox.prop('checked', ! $checkbox.is(':checked'))
+                        success: () => {
+                            const message = options.flashMessage ? __(options.flashMessage) : __('Saved');
+                            messenger.notificationFlashMessage('success', message);
+                        },
+                        error: () => {
+                            $checkbox.prop('checked', !$checkbox.is(':checked'));
+                            if (options.flashErrorMessage) {
+                                messenger.notificationFlashMessage('error', __(options.flashErrorMessage));
+                            }
+                        }
                     });
                 });
 
