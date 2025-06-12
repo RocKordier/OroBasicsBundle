@@ -18,6 +18,6 @@ final readonly class OroInstallListener
 
     public function __invoke(InstallerEvent $event): void
     {
-        $event->getCommandExecutor()->runCommand('ehdev:init-role-acl');
+        $event->getCommandExecutor()->runCommand('ehdev:init-role-acl', ['--process-isolation' => true]);
     }
 }
