@@ -20,11 +20,24 @@ trait DatagridFilterTypeExtensionTrait
 
             $value = array_flip($value);
 
+            /** @var string $type */
+            $type = current(toArray(self::getExtendedTypes()));
+            if ($ehdevOpt && \array_key_exists('filter_remove', $ehdevOpt) && \is_array($ehdevOpt['filter_remove'])) {
+                $filterRemove = $ehdevOpt['filter_remove'];
+
+                foreach ($filterRemove as $filter) {
+                    unset($value[$filter]);
+
+                    $constName = $type . '::' . $filter;
+                    if (\defined($constName) && \array_key_exists((string) \constant($constName), $value)) {
+                        unset($value[(string) \constant($constName)]);
+                    }
+                }
+            }
+
             if ($ehdevOpt && \array_key_exists('filter_sort', $ehdevOpt) && \is_array($ehdevOpt['filter_sort'])) {
                 $filterSort = $ehdevOpt['filter_sort'];
 
-                /** @var string $type */
-                $type = current(toArray(self::getExtendedTypes()));
                 foreach (array_reverse($filterSort) as $filter) {
                     if (\defined($type.'::'.$filter)) {
                         $arrayKey = null;
