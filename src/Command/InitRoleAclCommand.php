@@ -37,7 +37,7 @@ class InitRoleAclCommand extends Command
     {
         $style = new SymfonyStyle($input, $output);
         $style->title('[EHDev] Init Oro Roles and Acls');
-        
+
         $configLoader = new CumulativeConfigLoader(
             'ehdev_roles',
             new YamlCumulativeFileLoader('Resources/config/ehdev/acl_roles.yml')

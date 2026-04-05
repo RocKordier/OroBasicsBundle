@@ -28,7 +28,7 @@ trait DatagridFilterTypeExtensionTrait
                 foreach ($filterRemove as $filter) {
                     unset($value[$filter]);
 
-                    $constName = $type . '::' . $filter;
+                    $constName = $type.'::'.$filter;
                     if (\defined($constName) && \array_key_exists((string) \constant($constName), $value)) {
                         unset($value[(string) \constant($constName)]);
                     }
