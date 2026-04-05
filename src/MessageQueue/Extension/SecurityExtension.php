@@ -9,6 +9,7 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\SecurityBundle\Authentication\Token\ConsoleToken;
 use Oro\Bundle\UserBundle\Entity\User;
+use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Component\MessageQueue\Consumption\AbstractExtension;
 use Oro\Component\MessageQueue\Consumption\Context;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
@@ -21,6 +22,7 @@ class SecurityExtension extends AbstractExtension
         private readonly ConfigManager $configManager,
         private readonly EntityManagerInterface $entityManager,
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly UserManager $userManager,
     ) {}
 
     public function onPreReceived(Context $context): void
@@ -30,7 +32,7 @@ class SecurityExtension extends AbstractExtension
 
             return;
         }
-        /** @var User|null $userConfig */
+        /** @var User|string|null $userConfig */
         $userConfig = $this->configManager->get('ehdev_basics.bg_username');
         if (null === $userConfig) {
             $context->getLogger()->warning('User is not set or does not exist');
@@ -38,7 +40,14 @@ class SecurityExtension extends AbstractExtension
             return;
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $userConfig->getUsername()]);
+        if ($userConfig instanceof User) {
+            $username = $userConfig->getUserIdentifier();
+        } else {
+            $username = $userConfig;
+        }
+
+        $user = $this->userManager->findUserByUsername($username);
+
         if (null === $user) {
             $context->getLogger()->warning('User is not set or does not exist');
 
@@ -67,7 +76,7 @@ class SecurityExtension extends AbstractExtension
         $this->tokenStorage->setToken($token);
 
         $context->getLogger()->info('Authenticated user with username {username} and organization {name}.', [
-            'username' => $token->getUser()?->getUsername(),
+            'username' => $token->getUser()?->getUserIdentifier(),
             'name' => $token->getOrganization()->getName(),
         ]);
     }
