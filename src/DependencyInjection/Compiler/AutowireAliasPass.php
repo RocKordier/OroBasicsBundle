@@ -13,6 +13,7 @@ use Oro\Bundle\DataAuditBundle\Provider\AuditConfigProvider;
 use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
 use Oro\Bundle\UIBundle\Provider\WidgetContextProvider;
+use Oro\Bundle\UserBundle\Entity\UserManager;
 use Oro\Bundle\UserBundle\Mailer\UserTemplateEmailSender;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,6 +31,7 @@ class AutowireAliasPass implements CompilerPassInterface
         'oro_dataaudit.audit_config_provider' => AuditConfigProvider::class,
         'oro_security.acl.manager' => AclManager::class,
         'oro_ui.provider.widget_context' => WidgetContextProvider::class,
+        'oro_user.manager' => UserManager::class,
     ];
 
     public function process(ContainerBuilder $container): void

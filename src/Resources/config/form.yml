@@ -1,4 +1,9 @@
 services:
+    _defaults:
+        public: false
+        autowire: true
+        autoconfigure: true
+
     ehdev_basics.form.type.oro_user_email_select:
         class: EHDev\BasicsBundle\Form\Type\OroUserEmailOriginSelectType
         tags:
@@ -13,7 +18,6 @@ services:
 
     ehdev_basics.form.type.oro_username_choice:
         class: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType
-        arguments: ["@oro_entity.doctrine_helper"]
         tags:
             - { name: form.type, alias: EHDev\BasicsBundle\Form\Type\OroUsernameChoiceType }
 
@@ -21,7 +25,6 @@ services:
         class: EHDev\BasicsBundle\Form\Type\OroOrganizationChoiceType
         tags:
             - { name: form.type, alias: EHDev\BasicsBundle\Form\Type\OroOrganizationChoiceType }
-
 
     ehdev_basics.form.extension.text_filter_type:
         class: EHDev\BasicsBundle\Form\Extension\TextFilterTypeExtension
