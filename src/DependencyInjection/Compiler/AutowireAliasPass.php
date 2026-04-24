@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace EHDev\BasicsBundle\DependencyInjection\Compiler;
 
 use Oro\Bundle\ActivityBundle\Manager\ActivityManager;
+use Oro\Bundle\ActivityBundle\Tools\ActivityAssociationHelper;
 use Oro\Bundle\AddressBundle\Form\EventListener\AddressCountryAndRegionSubscriber;
 use Oro\Bundle\AttachmentBundle\Manager\AttachmentManager;
 use Oro\Bundle\AttachmentBundle\Provider\AttachmentProvider;
 use Oro\Bundle\ChartBundle\Model\ChartViewBuilder;
 use Oro\Bundle\DataAuditBundle\Provider\AuditConfigProvider;
+use Oro\Bundle\EntityExtendBundle\Tools\ExtendDbIdentifierNameGenerator;
 use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
 use Oro\Bundle\UIBundle\Provider\WidgetContextProvider;
@@ -32,6 +34,8 @@ class AutowireAliasPass implements CompilerPassInterface
         'oro_security.acl.manager' => AclManager::class,
         'oro_ui.provider.widget_context' => WidgetContextProvider::class,
         'oro_user.manager' => UserManager::class,
+        'oro_activity.association_helper' => ActivityAssociationHelper::class,
+        'oro_migration.db_id_name_generator' => ExtendDbIdentifierNameGenerator::class,
     ];
 
     public function process(ContainerBuilder $container): void
