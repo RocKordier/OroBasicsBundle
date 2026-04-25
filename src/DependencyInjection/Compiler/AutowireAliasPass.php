@@ -13,6 +13,7 @@ use Oro\Bundle\ChartBundle\Model\ChartViewBuilder;
 use Oro\Bundle\DataAuditBundle\Provider\AuditConfigProvider;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendDbIdentifierNameGenerator;
 use Oro\Bundle\FormBundle\Model\UpdateHandlerFacade;
+use Oro\Bundle\NavigationBundle\Provider\TitleServiceInterface;
 use Oro\Bundle\SecurityBundle\Acl\Persistence\AclManager;
 use Oro\Bundle\UIBundle\Provider\WidgetContextProvider;
 use Oro\Bundle\UserBundle\Entity\UserManager;
@@ -36,6 +37,7 @@ class AutowireAliasPass implements CompilerPassInterface
         'oro_user.manager' => UserManager::class,
         'oro_activity.association_helper' => ActivityAssociationHelper::class,
         'oro_migration.db_id_name_generator' => ExtendDbIdentifierNameGenerator::class,
+        'oro_navigation.title_service' => TitleServiceInterface::class,
     ];
 
     public function process(ContainerBuilder $container): void
