@@ -27,8 +27,8 @@
         }
     },
     "require": {
-        "php": "^8.3",
-        "oro/platform": "^6.0.0",
+        "php": "^8.4",
+        "oro/platform": "^7.0",
         "gedmo/doctrine-extensions": "^3.10",
         "stof/doctrine-extensions-bundle": "^1.7",
         "spatie/emoji": "^4.1",
