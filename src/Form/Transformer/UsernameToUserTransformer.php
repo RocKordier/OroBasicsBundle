@@ -15,7 +15,7 @@ use Symfony\Component\Form\DataTransformerInterface;
  * transform:        string|null  →  User|null   (config → form)
  * reverseTransform: User|null    →  string|null  (form → config)
  *
- * @implements DataTransformerInterface<string|null|User, User|null>
+ * @implements DataTransformerInterface<string|User|null, User|null>
  */
 class UsernameToUserTransformer implements DataTransformerInterface
 {
