@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Command;
 
-use Doctrine\ORM\EntityRepository;
 use Oro\Bundle\EntityBundle\ORM\DoctrineHelper;
 use Oro\Bundle\SecurityBundle\Acl\Exception\InvalidAclMaskException;
 use Oro\Bundle\SecurityBundle\Acl\Extension\AclExtensionInterface;
@@ -19,17 +18,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
+/**
+ * @phpstan-type RoleConfig array{label?: string, description?: string, permissions?: array<string, list<string>>}
+ */
 #[AsCommand('ehdev:init-role-acl', 'Init Oro Roles and Acls', ['ehdev:initRoleAcl'])]
 class InitRoleAclCommand extends Command
 {
-    private EntityRepository $repository;
-
     public function __construct(
         private readonly AclManager $aclManager,
         private readonly DoctrineHelper $doctrineHelper,
     ) {
-        $this->repository = $this->doctrineHelper->getEntityRepositoryForClass(Role::class);
-
         parent::__construct();
     }
 
@@ -51,34 +49,42 @@ class InitRoleAclCommand extends Command
         return 0;
     }
 
+    /**
+     * @return array<string, RoleConfig>
+     */
     private function mergeRoleConfigs(CumulativeConfigLoader $configLoader): array
     {
         $mergedRoles = [];
 
         foreach ($configLoader->load() as $resource) {
-            foreach ($resource->data as $roleName => $roleConfigData) {
+            if (!\is_array($resource->data)) {
+                continue;
+            }
+
+            foreach ($resource->data as $roleName => $rawConfig) {
+                $roleConfigData = $this->normalizeRoleConfig($rawConfig);
+                $roleName = (string) $roleName;
+
                 if (!isset($mergedRoles[$roleName])) {
                     $mergedRoles[$roleName] = $roleConfigData;
-                } else {
-                    if (isset($roleConfigData['label'])) {
-                        $mergedRoles[$roleName]['label'] = $roleConfigData['label'];
-                    }
-                    if (isset($roleConfigData['description'])) {
-                        $mergedRoles[$roleName]['description'] = $roleConfigData['description'];
-                    }
+                    continue;
+                }
 
-                    if (isset($roleConfigData['permissions'])) {
-                        if (!isset($mergedRoles[$roleName]['permissions'])) {
-                            $mergedRoles[$roleName]['permissions'] = [];
-                        }
-                        foreach ($roleConfigData['permissions'] as $permission => $acls) {
-                            if (!isset($mergedRoles[$roleName]['permissions'][$permission])) {
-                                $mergedRoles[$roleName]['permissions'][$permission] = $acls;
-                            } else {
-                                $mergedRoles[$roleName]['permissions'][$permission] = array_unique(array_merge($mergedRoles[$roleName]['permissions'][$permission], $acls));
-                            }
-                        }
+                if (isset($roleConfigData['label'])) {
+                    $mergedRoles[$roleName]['label'] = $roleConfigData['label'];
+                }
+                if (isset($roleConfigData['description'])) {
+                    $mergedRoles[$roleName]['description'] = $roleConfigData['description'];
+                }
+
+                if (isset($roleConfigData['permissions'])) {
+                    $permissions = $mergedRoles[$roleName]['permissions'] ?? [];
+                    foreach ($roleConfigData['permissions'] as $permission => $acls) {
+                        $permissions[$permission] = isset($permissions[$permission])
+                            ? array_values(array_unique(array_merge($permissions[$permission], $acls)))
+                            : $acls;
                     }
+                    $mergedRoles[$roleName]['permissions'] = $permissions;
                 }
             }
         }
@@ -86,28 +92,59 @@ class InitRoleAclCommand extends Command
         return $mergedRoles;
     }
 
+    /**
+     * @return RoleConfig
+     */
+    private function normalizeRoleConfig(mixed $rawConfig): array
+    {
+        if (!\is_array($rawConfig)) {
+            return [];
+        }
+
+        $roleConfig = [];
+        if (isset($rawConfig['label']) && \is_scalar($rawConfig['label'])) {
+            $roleConfig['label'] = (string) $rawConfig['label'];
+        }
+        if (isset($rawConfig['description']) && \is_scalar($rawConfig['description'])) {
+            $roleConfig['description'] = (string) $rawConfig['description'];
+        }
+        if (isset($rawConfig['permissions']) && \is_array($rawConfig['permissions'])) {
+            $roleConfig['permissions'] = [];
+            foreach ($rawConfig['permissions'] as $permission => $acls) {
+                $roleConfig['permissions'][(string) $permission] = \is_array($acls)
+                    ? array_values(array_map(strval(...), array_filter($acls, \is_scalar(...))))
+                    : [];
+            }
+        }
+
+        return $roleConfig;
+    }
+
+    /**
+     * @param array<string, RoleConfig> $roles
+     */
     private function initRoles(OutputInterface $output, array $roles): void
     {
         $persistRoles = [];
 
         foreach ($roles as $roleName => $roleConfigData) {
-            if (!\array_key_exists('label', $roleConfigData)) {
+            if (!isset($roleConfigData['label'])) {
                 $output->writeln(\sprintf('<error>No label for role: %s</error>', $roleName));
                 continue;
             }
 
             $label = $roleConfigData['label'];
-            $description = \array_key_exists('description', $roleConfigData) ? $roleConfigData['description'] : '';
+            $description = $roleConfigData['description'] ?? '';
 
             if (!$role = $this->getRole($roleName)) {
                 $output->writeln('Create new role: '.$roleName.' ('.$label.' - '.$description.')');
                 $newRole = new Role($roleName);
                 $newRole->setLabel($label);
-                $newRole->setExtendDescription($description);
+                $newRole->set('extend_description', $description);
                 $persistRoles[] = $newRole;
             } else {
                 $role->setLabel($label);
-                $role->setExtendDescription($description);
+                $role->set('extend_description', $description);
                 $persistRoles[] = $role;
             }
         }
@@ -119,6 +156,9 @@ class InitRoleAclCommand extends Command
         $this->doctrineHelper->getEntityManagerForClass(Role::class)?->flush();
     }
 
+    /**
+     * @param array<string, RoleConfig> $roles
+     */
     private function initAcl(OutputInterface $output, array $roles): void
     {
         if (!$this->aclManager->isAclEnabled()) {
@@ -128,7 +168,7 @@ class InitRoleAclCommand extends Command
         }
 
         foreach ($roles as $roleName => $roleConfigData) {
-            if (($role = $this->getRole($roleName)) && \array_key_exists('permissions', $roleConfigData)) {
+            if (($role = $this->getRole($roleName)) && isset($roleConfigData['permissions'])) {
                 $output->writeln('INIT role: '.$roleName);
                 $sid = $this->aclManager->getSid($role);
                 foreach ($roleConfigData['permissions'] as $permission => $acls) {
@@ -149,6 +189,9 @@ class InitRoleAclCommand extends Command
         $output->writeln('Completed');
     }
 
+    /**
+     * @param list<string> $acls
+     */
     private function processPermission(
         SecurityIdentityInterface $sid,
         string $permission,
@@ -163,11 +206,9 @@ class InitRoleAclCommand extends Command
         $maskBuilders = $extension->getAllMaskBuilders();
         foreach ($maskBuilders as $maskBuilder) {
             $mask = $maskBuilder->reset()->get();
-            if (!empty($acls)) {
-                foreach ($acls as $acl) {
-                    if ($maskBuilder->hasMask('MASK_'.$acl)) {
-                        $mask = $maskBuilder->add($acl)->get();
-                    }
+            foreach ($acls as $acl) {
+                if ($maskBuilder->hasMask('MASK_'.$acl)) {
+                    $mask = $maskBuilder->add($acl)->get();
                 }
             }
 
@@ -177,9 +218,10 @@ class InitRoleAclCommand extends Command
 
     private function getRole(string $roleName): ?Role
     {
-        /** @var Role|null $role */
-        $role = $this->repository->findOneBy(['role' => $roleName]);
+        $role = $this->doctrineHelper
+            ->getEntityRepositoryForClass(Role::class)
+            ->findOneBy(['role' => $roleName]);
 
-        return $role;
+        return $role instanceof Role ? $role : null;
     }
 }
