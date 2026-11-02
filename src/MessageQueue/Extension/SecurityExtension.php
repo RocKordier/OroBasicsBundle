@@ -48,7 +48,7 @@ class SecurityExtension extends AbstractExtension
 
         $user = $this->userManager->findUserByUsername($username);
 
-        if (null === $user) {
+        if (!$user instanceof User) {
             $context->getLogger()->warning('User is not set or does not exist');
 
             return;
@@ -65,7 +65,7 @@ class SecurityExtension extends AbstractExtension
         $token = new ConsoleToken();
         $token->setUser($user);
 
-        if ($organization) {
+        if ($organization instanceof Organization) {
             $token->setOrganization($organization);
         } else {
             $context->getLogger()->warning('No Organization found');
