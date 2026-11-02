@@ -10,3 +10,8 @@ composer.lock
 /coverage
 /.php_cs.cache
 /.build
+/.php-cs-fixer.cache
+/.phpunit.cache
+phpunit.xml
+clover.xml
+.phpunit.result.cache

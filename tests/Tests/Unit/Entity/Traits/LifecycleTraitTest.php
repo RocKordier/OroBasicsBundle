@@ -7,9 +7,6 @@ namespace EHDev\BasicsBundle\Tests\Unit\Entity\Traits;
 use EHDev\BasicsBundle\Tests\Fixture\LifecycleTraitTestClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \EHDev\BasicsBundle\Entity\Traits\LifecycleTrait
- */
 class LifecycleTraitTest extends TestCase
 {
     private LifecycleTraitTestClass $testClass;
@@ -19,24 +16,19 @@ class LifecycleTraitTest extends TestCase
         $this->testClass = new LifecycleTraitTestClass();
     }
 
-    /**
-     * @covers ::prePersist
-     */
     public function testPrePersist(): void
     {
         $this->testClass->prePersist();
 
-        $this->assertInstanceOf(\DateTime::class, $this->testClass->getCreatedAt());
+        $this->assertEquals(new \DateTimeZone('UTC'), $this->testClass->getCreatedAt()->getTimezone());
         $this->assertEquals($this->testClass->getCreatedAt(), $this->testClass->getUpdatedAt());
     }
 
-    /**
-     * @covers ::preUpdate
-     */
     public function testPreUpdate(): void
     {
+        $before = new \DateTime('now', new \DateTimeZone('UTC'));
         $this->testClass->preUpdate();
 
-        $this->assertInstanceOf(\DateTime::class, $this->testClass->getUpdatedAt());
+        $this->assertGreaterThanOrEqual($before, $this->testClass->getUpdatedAt());
     }
 }

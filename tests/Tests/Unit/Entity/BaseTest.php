@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace EHDev\BasicsBundle\Tests\Unit\Entity;
 
 use EHDev\BasicsBundle\Entity\Base;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \EHDev\BasicsBundle\Entity\Base
- */
+#[CoversClass(Base::class)]
 class BaseTest extends TestCase
 {
     private Base $testClass;
@@ -19,9 +18,6 @@ class BaseTest extends TestCase
         $this->testClass = new Base();
     }
 
-    /**
-     * @covers ::getId
-     */
     public function testGetIdAreNull(): void
     {
         $this->assertNull($this->testClass->getId());

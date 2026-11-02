@@ -9,9 +9,6 @@ use EHDev\BasicsBundle\Tests\Fixture\BaseEntityMigrationTraitTestClass;
 use EHDev\BasicsBundle\Tests\Util\PHPUnitUtil;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \EHDev\BasicsBundle\Migrations\BaseEntityMigrationTrait
- */
 class BaseEntityMigrationTraitTest extends TestCase
 {
     public function testMigrationTrait(): void
