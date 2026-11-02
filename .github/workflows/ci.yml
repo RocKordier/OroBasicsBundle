@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches: ['develop', 'main']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # never cancel a running release on main
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }}${{ matrix.dependencies == 'lowest' && ' (lowest)' || '' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # oro/platform 7.0 requires PHP ~8.5.0
+        php: ['8.5']
+        dependencies: ['highest', 'lowest']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+
+      - name: PHPUnit
+        run: vendor/bin/phpunit
+
+  static-analysis:
+    name: PHPStan & PHP CS Fixer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          coverage: none
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse -c phpstan.neon --no-progress --error-format=github --memory-limit=1G
+
+      - name: PHP CS Fixer
+        run: vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          coverage: pcov
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+
+      - name: PHPUnit with coverage
+        run: vendor/bin/phpunit --colors=never --coverage-clover build/coverage.xml --coverage-text=build/coverage.txt
+
+      - name: Coverage summary
+        run: |
+          {
+            echo '### Coverage'
+            echo '```'
+            cat build/coverage.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage
+          path: build/coverage.xml
+
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        with:
+          files: build/coverage.xml
+          disable_search: true
+          # forks get no OIDC token, codecov falls back to tokenless upload for public repos
+          use_oidc: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork) }}
+          fail_ci_if_error: false
+
+  release:
+    name: Release
+    needs: [tests, static-analysis]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: semantic-release
+        run: npx --yes semantic-release@25
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
