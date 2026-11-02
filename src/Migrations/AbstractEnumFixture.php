@@ -4,57 +4,66 @@ declare(strict_types=1);
 
 namespace EHDev\BasicsBundle\Migrations;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ObjectManager;
-use Oro\Bundle\EntityExtendBundle\Entity\AbstractEnumValue;
-use Oro\Bundle\EntityExtendBundle\Entity\Repository\EnumValueRepository;
+use Oro\Bundle\EntityExtendBundle\Entity\EnumOption;
+use Oro\Bundle\EntityExtendBundle\Entity\Repository\EnumOptionRepository;
 use Oro\Bundle\EntityExtendBundle\Migration\Fixture\AbstractEnumFixture as AbstractFixture;
 use Oro\Bundle\EntityExtendBundle\Tools\ExtendHelper;
+use Oro\Bundle\TranslationBundle\Translation\Translator;
 
 /**
- * Extends the AbstractEnumFixture class to support
- * add new enum options.
+ * Extends the AbstractEnumFixture class of Oro to support adding new enum options
+ * to an existing enum, e.g. in combination with the VersionedFixtureInterface.
+ * Existing options are left untouched, new ones are appended after the highest priority.
  */
 abstract class AbstractEnumFixture extends AbstractFixture
 {
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
-        /** @var class-string $className */
-        $className = ExtendHelper::buildEnumValueClassName($this->getEnumCode());
-        /** @var EnumValueRepository $enumRepo */
-        $enumRepo = $manager->getRepository($className);
-        $priority = $this->getLastPriority($enumRepo);
+        $enumRepo = $manager->getRepository(EnumOption::class);
+        if (!$enumRepo instanceof EnumOptionRepository) {
+            throw new \LogicException(\sprintf('The repository of %s must be an %s.', EnumOption::class, EnumOptionRepository::class));
+        }
+
+        $enumCode = $this->getEnumCode();
+        $priority = $this->getLastPriority($enumRepo, $enumCode) + 1;
 
         foreach ($this->getData() as $id => $name) {
-            if (!\is_string($id) || '' === $id) {
-                $id = $name;
+            if (!\is_scalar($name) || '' === (string) $name) {
+                continue;
             }
-            $id = ExtendHelper::buildEnumValueId($id);
+            $name = (string) $name;
+            $internalId = ExtendHelper::buildEnumInternalId(\is_string($id) && '' !== $id ? $id : $name);
 
-            $isDefault = $id === $this->getDefaultValue();
-
-            /** @var AbstractEnumValue|false $enumOption */
-            $enumOption = $enumRepo->find($id);
-            if (!$enumOption) {
-                $enumOption = $enumRepo->createEnumValue($name, $priority++, $isDefault, $id);
-                $manager->persist($enumOption);
-            } elseif ($enumOption->getName() !== $name || $enumOption->isDefault() !== $isDefault) {
-                $manager->persist($enumOption);
+            if (null !== $enumRepo->getValue(ExtendHelper::buildEnumOptionId($enumCode, $internalId))) {
+                continue;
             }
+
+            $isDefault = $internalId === $this->getDefaultValue();
+            $enumOption = $enumRepo->createEnumOption($enumCode, $internalId, $name, $priority++, $isDefault);
+            if ($enumOption instanceof EnumOption) {
+                $enumOption->setLocale(Translator::DEFAULT_LOCALE);
+            }
+
+            $manager->persist($enumOption);
         }
 
         $manager->flush();
     }
 
     /**
-     * Returns the last used priority.
+     * Returns the highest priority used by the options of the given enum.
      */
-    private function getLastPriority(EnumValueRepository $repo): int
+    private function getLastPriority(EnumOptionRepository $repo, string $enumCode): int
     {
-        return (int) $repo->createQueryBuilder('e')
+        $priority = $repo->createQueryBuilder('e')
             ->select('MAX(e.priority)')
-            ->setMaxResults(1)
+            ->where('e.enumCode = :enumCode')
+            ->setParameter('enumCode', $enumCode)
             ->getQuery()
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+            ->getSingleScalarResult();
+
+        return is_numeric($priority) ? (int) $priority : 0;
     }
 }
