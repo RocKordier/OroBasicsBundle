@@ -1,8 +1,13 @@
 {
     "name": "ehdev/oro-basics-bundle",
     "description": "Basic configuration, helper and tools for an oro application",
+    "type": "symfony-bundle",
     "homepage": "https://github.com/RocKordier/OroBasicsBundle",
-    "keywords": ["Oro Platform", "Symfony", "Basics"],
+    "keywords": [
+        "Oro Platform",
+        "Symfony",
+        "Basics"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -18,16 +23,20 @@
     },
     "autoload": {
         "psr-4": {
-            "EHDev\\BasicsBundle\\": ["src/"]
+            "EHDev\\BasicsBundle\\": [
+                "src/"
+            ]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "EHDev\\BasicsBundle\\": ["tests/"]
+            "EHDev\\BasicsBundle\\": [
+                "tests/"
+            ]
         }
     },
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "oro/platform": "^7.0",
         "gedmo/doctrine-extensions": "^3.10",
         "stof/doctrine-extensions-bundle": "^1.7",
@@ -35,24 +44,30 @@
         "nikic/iter": "^2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9",
-        "phpspec/prophecy-phpunit": "^2.2",
-        "phpstan/phpstan": "^1.10",
-        "friendsofphp/php-cs-fixer": "^3.39.1",
-        "kubawerlos/php-cs-fixer-custom-fixers": "^3.18",
-        "phpstan/phpstan-phpunit": "^1.3",
-        "phpstan/extension-installer": "^1.3",
-        "composer/semver": "dev-main as 3.3.2"
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "jangregor/phpstan-prophecy": "^2.3",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.37",
+        "phpspec/prophecy-phpunit": "^2.5",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^13.0"
     },
-    "config" : {
-        "fxp-asset" : {
-            "enabled" : false
+    "config": {
+        "fxp-asset": {
+            "enabled": false
         },
         "allow-plugins": {
             "phpstan/extension-installer": true,
             "symfony/flex": true,
             "php-http/discovery": true,
             "symfony/runtime": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "7.x-dev"
         }
     },
     "minimum-stability": "dev",
