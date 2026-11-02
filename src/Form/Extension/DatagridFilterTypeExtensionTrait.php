@@ -14,50 +14,66 @@ trait DatagridFilterTypeExtensionTrait
 {
     private function getNormalizer(): \Closure
     {
-        return function (Options $options, $value) {
-            /** @var array $ehdevOpt */
+        return static function (Options $options, mixed $value): array {
             $ehdevOpt = $options->offsetGet('ehdev_options');
+            $ehdevOpt = \is_array($ehdevOpt) ? $ehdevOpt : [];
 
-            $value = array_flip($value);
+            /** @var array<int|string, int|string> $choices */
+            $choices = \is_array($value) ? array_flip(array_filter($value, self::isArrayKey(...))) : [];
 
-            /** @var string $type */
             $type = current(toArray(self::getExtendedTypes()));
-            if ($ehdevOpt && \array_key_exists('filter_remove', $ehdevOpt) && \is_array($ehdevOpt['filter_remove'])) {
-                $filterRemove = $ehdevOpt['filter_remove'];
+            $type = \is_string($type) ? $type : '';
 
-                foreach ($filterRemove as $filter) {
-                    unset($value[$filter]);
+            if (isset($ehdevOpt['filter_remove']) && \is_array($ehdevOpt['filter_remove'])) {
+                foreach (array_filter($ehdevOpt['filter_remove'], \is_string(...)) as $filter) {
+                    unset($choices[$filter]);
 
-                    $constName = $type.'::'.$filter;
-                    if (\defined($constName) && \array_key_exists((string) \constant($constName), $value)) {
-                        unset($value[(string) \constant($constName)]);
+                    $constantValue = self::getFilterConstant($type, $filter);
+                    if (null !== $constantValue) {
+                        unset($choices[$constantValue]);
                     }
                 }
             }
 
-            if ($ehdevOpt && \array_key_exists('filter_sort', $ehdevOpt) && \is_array($ehdevOpt['filter_sort'])) {
-                $filterSort = $ehdevOpt['filter_sort'];
-
-                foreach (array_reverse($filterSort) as $filter) {
-                    if (\defined($type.'::'.$filter)) {
-                        $arrayKey = null;
-                        if (\array_key_exists((string) \constant($type.'::'.$filter), $value)) {
-                            $arrayKey = \constant($type.'::'.$filter);
-                        } else {
-                            throw new InvalidArgumentException('Filter not defined in form type');
-                        }
-                        $arrayValue = $value[$arrayKey];
-                        unset($value[$arrayKey]);
-
-                        $value = [$arrayKey => $arrayValue] + $value;
-                    } else {
+            if (isset($ehdevOpt['filter_sort']) && \is_array($ehdevOpt['filter_sort'])) {
+                foreach (array_reverse(array_filter($ehdevOpt['filter_sort'], \is_string(...))) as $filter) {
+                    $arrayKey = self::getFilterConstant($type, $filter);
+                    if (null === $arrayKey) {
                         throw new InvalidArgumentException('Filter Type not defined');
                     }
+                    if (!\array_key_exists($arrayKey, $choices)) {
+                        throw new InvalidArgumentException('Filter not defined in form type');
+                    }
+
+                    $arrayValue = $choices[$arrayKey];
+                    unset($choices[$arrayKey]);
+
+                    $choices = [$arrayKey => $arrayValue] + $choices;
                 }
             }
 
-            return array_flip($value);
+            return array_flip($choices);
         };
+    }
+
+    private static function getFilterConstant(string $type, string $filter): int|string|null
+    {
+        $constantName = $type.'::'.$filter;
+        if (!\defined($constantName)) {
+            return null;
+        }
+
+        $constantValue = \constant($constantName);
+
+        return self::isArrayKey($constantValue) ? $constantValue : null;
+    }
+
+    /**
+     * @phpstan-assert-if-true int|string $value
+     */
+    private static function isArrayKey(mixed $value): bool
+    {
+        return \is_int($value) || \is_string($value);
     }
 
     private function setEhdevOptions(OptionsResolver $resolver): void

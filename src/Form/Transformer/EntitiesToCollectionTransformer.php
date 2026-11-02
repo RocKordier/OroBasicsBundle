@@ -9,8 +9,14 @@ use Oro\Bundle\FormBundle\Form\DataTransformer\EntitiesToIdsTransformer;
 
 class EntitiesToCollectionTransformer extends EntitiesToIdsTransformer
 {
+    /**
+     * @return ArrayCollection<array-key, mixed>
+     */
+    #[\Override]
     public function reverseTransform($value): ArrayCollection
     {
-        return new ArrayCollection(parent::reverseTransform($value));
+        $entities = parent::reverseTransform($value);
+
+        return new ArrayCollection(\is_array($entities) ? $entities : []);
     }
 }
