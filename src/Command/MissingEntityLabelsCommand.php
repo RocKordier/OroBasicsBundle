@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand('ehdev:missing-entity-labels', 'Shows all Labels which are missing for entities', ['ehdev:missingEntityLabels'])]
 class MissingEntityLabelsCommand extends Command
 {
-    public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
+    public const ENTITY_CLASS_NAME = EntityConfigModel::class;
     public const OPTION_IGNORE_ORO = 'ignore-oro';
     public const OPTION_IGNORE_EXTEND = 'ignore-extend';
     public const OPTION_LOCALES = 'for-locale';
@@ -80,17 +80,14 @@ class MissingEntityLabelsCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Untranslated Strings');
         $all = $input->getOption(self::OPTION_SHOW_ALL);
-        /** @var array $locales */
-        $locales = $input->getOption(self::OPTION_LOCALES);
+        $locales = $this->getLocales($input);
 
         $this->checkForActiveLanguages($locales, $io);
 
         $missingCount = 0;
         $entityCount = 0;
 
-        /** @var EntityConfigModel $item */
         foreach ($this->getAllConfiguredEntities() as $item) {
-            $translations = [];
             $className = $item->getClassName();
 
             $entity = $input->getOption(self::OPTION_ENTITY);
@@ -104,19 +101,20 @@ class MissingEntityLabelsCommand extends Command
             }
 
             $translations = $this->entityPropertyTranslationProvider->getTranslations($item, $locales);
-            $translations = array_filter($translations, function (PropertyTranslation $translation) use ($all) {
-                return $all || !$translation->isPartialTranslatied();
-            });
+            $translations = array_filter(
+                $translations,
+                static fn (PropertyTranslation $translation): bool => $all || !$translation->isPartialTranslatied(),
+            );
 
-            $missingTranslations = array_filter($translations, function (PropertyTranslation $translation) {
-                return !$translation->isPartialTranslatied();
-            });
+            $missingTranslations = array_filter(
+                $translations,
+                static fn (PropertyTranslation $translation): bool => !$translation->isPartialTranslatied(),
+            );
 
             if (\count($missingTranslations) > 0) {
                 $tableHelper = new Table($output);
                 $tableHelper->setHeaders(array_merge(['Property', 'Data Type'], $locales, ['transKey']));
 
-                /** @var PropertyTranslation $translation */
                 foreach ($translations as $translation) {
                     $row = [
                         $translation->getPropertyName(),
@@ -151,6 +149,22 @@ class MissingEntityLabelsCommand extends Command
         return 1;
     }
 
+    /**
+     * @return list<string>
+     */
+    private function getLocales(InputInterface $input): array
+    {
+        $locales = $input->getOption(self::OPTION_LOCALES);
+        if (!\is_array($locales)) {
+            return [];
+        }
+
+        return array_values(array_map(strval(...), array_filter($locales, \is_scalar(...))));
+    }
+
+    /**
+     * @param list<string> $locales
+     */
     private function checkForActiveLanguages(array $locales, SymfonyStyle $io): void
     {
         $availableLanguageCodes = [];
@@ -170,9 +184,10 @@ class MissingEntityLabelsCommand extends Command
             )
         );
 
-        $notActiveLocales = array_filter($locales, function (string $locale) use ($availableLanguageCodes) {
-            return !\in_array($locale, $availableLanguageCodes, true);
-        });
+        $notActiveLocales = array_filter(
+            $locales,
+            static fn (string $locale): bool => !\in_array($locale, $availableLanguageCodes, true),
+        );
 
         if ($notActiveLocales) {
             $io->warning(
@@ -184,12 +199,17 @@ class MissingEntityLabelsCommand extends Command
         }
     }
 
+    /**
+     * @return list<EntityConfigModel>
+     */
     private function getAllConfiguredEntities(): array
     {
-        return $this->getEntityConfigModelRepository()
-                    ->findBy([], ['className' => 'ASC']);
+        return array_values($this->getEntityConfigModelRepository()->findBy([], ['className' => 'ASC']));
     }
 
+    /**
+     * @return ObjectRepository<EntityConfigModel>
+     */
     private function getEntityConfigModelRepository(): ObjectRepository
     {
         return $this->registry

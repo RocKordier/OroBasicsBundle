@@ -13,6 +13,9 @@ class PropertyTranslationManager
         private readonly Translator $translator,
     ) {}
 
+    /**
+     * @param list<string> $locales
+     */
     public function createPropertyTranslation(string $propertyName, string $translationKey, string $fieldType, array $locales): PropertyTranslation
     {
         $propertyTranslation = new PropertyTranslation();

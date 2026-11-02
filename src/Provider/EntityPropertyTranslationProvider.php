@@ -6,9 +6,9 @@ namespace EHDev\BasicsBundle\Provider;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use EHDev\BasicsBundle\Model\Manager\PropertyTranslationManager;
+use EHDev\BasicsBundle\Model\PropertyTranslation;
 use Oro\Bundle\EntityBundle\Provider\VirtualFieldProviderInterface;
 use Oro\Bundle\EntityConfigBundle\Config\ConfigManager;
 use Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel;
@@ -18,7 +18,7 @@ use Oro\Bundle\UIBundle\Tools\EntityLabelBuilder;
 
 class EntityPropertyTranslationProvider
 {
-    public const ENTITY_CLASS_NAME = 'Oro\Bundle\EntityConfigBundle\Entity\EntityConfigModel';
+    public const ENTITY_CLASS_NAME = EntityConfigModel::class;
 
     public function __construct(
         private readonly ManagerRegistry $registry,
@@ -27,6 +27,11 @@ class EntityPropertyTranslationProvider
         private readonly ConfigManager $configManager,
     ) {}
 
+    /**
+     * @param list<string> $locales
+     *
+     * @return list<PropertyTranslation>
+     */
     public function getTranslations(EntityConfigModel $configModel, array $locales): array
     {
         /** @var class-string $className */
@@ -53,7 +58,11 @@ class EntityPropertyTranslationProvider
             try {
                 $propertyConfig = $this->configManager->getFieldConfig('entity', $className, $propertyName);
                 $label = $propertyConfig->get('label');
-            } catch (RuntimeException $exception) {
+            } catch (RuntimeException) {
+                $label = null;
+            }
+
+            if (!\is_string($label) || '' === $label) {
                 $label = EntityLabelBuilder::getFieldLabelTranslationKey($className, $propertyName);
             }
 
@@ -68,26 +77,42 @@ class EntityPropertyTranslationProvider
         return $properties;
     }
 
+    /**
+     * @param ClassMetadata<object> $classMetaData
+     *
+     * @return list<string>
+     */
     private function getPropertyNames(ClassMetadata $classMetaData, string $className): array
     {
-        $fieldNames = $classMetaData->getFieldNames();
-        $associationNames = $classMetaData->getAssociationNames();
         $virtualFields = $this->virtualFieldProvider->getVirtualFields($className);
 
-        return array_merge($fieldNames, $associationNames, $virtualFields);
+        $propertyNames = array_merge(
+            $classMetaData->getFieldNames(),
+            $classMetaData->getAssociationNames(),
+            \is_array($virtualFields) ? $virtualFields : [],
+        );
+
+        return array_values(array_filter($propertyNames, \is_string(...)));
     }
 
     /**
      * @param class-string $class
+     *
+     * @return ClassMetadata<object>
      */
     private function getClassMetaData(string $class): ClassMetadata
     {
-        /** @var ObjectManager $manager */
         $manager = $this->registry->getManagerForClass($class);
+        if (null === $manager) {
+            throw new \LogicException(\sprintf('No entity manager found for class %s.', $class));
+        }
 
         return $manager->getClassMetadata($class);
     }
 
+    /**
+     * @return ObjectRepository<EntityConfigModel>
+     */
     private function getEntityConfigModelRepository(): ObjectRepository
     {
         return $this->registry->getManager('config')
@@ -96,12 +121,10 @@ class EntityPropertyTranslationProvider
 
     private function getFieldDataType(string $className, string $propertyName): string
     {
-        /** @var EntityConfigModel $entity */
         $entity = $this->getEntityConfigModelRepository()->findOneBy(['className' => $className]);
+        $field = $entity?->getField($propertyName);
 
-        /** @var FieldConfigModel|false $field */
-        $field = $entity->getField($propertyName);
-        if ($field) {
+        if ($field instanceof FieldConfigModel) {
             return $field->getType();
         }
 
