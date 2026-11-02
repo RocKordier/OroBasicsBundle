@@ -9,6 +9,11 @@ use Twig\TemplateWrapper;
 
 trait ResponseTrait
 {
+    /**
+     * @param array<string, mixed>               $handleResponse
+     * @param array<string, mixed>               $additionalParameter
+     * @param array<string, string|list<string>> $headers
+     */
     private function constructResponse(
         array|Response $handleResponse,
         string|TemplateWrapper $twigTemplate = '',

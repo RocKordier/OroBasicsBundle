@@ -2,8 +2,5 @@ parameters:
     level: max
     paths:
         - %currentWorkingDirectory%/src
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
-
-    ignoreErrors:
-            - '#Call to an undefined method Oro\\Bundle\\UserBundle\\Entity\\Role::setExtendDescription\(\)#'
+        - %currentWorkingDirectory%/tests
+    treatPhpDocTypesAsCertain: false

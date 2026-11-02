@@ -16,6 +16,9 @@ class IsWidgetFlow implements VoterInterface
         private readonly WidgetContextProvider $widgetContext,
     ) {}
 
+    /**
+     * @param array<mixed> $attributes
+     */
     public function vote(TokenInterface $token, mixed $subject, array $attributes): int
     {
         if (!\in_array(self::VOTER, $attributes)) {
